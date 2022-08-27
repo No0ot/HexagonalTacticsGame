@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 1322765930438733096}
   - component: {fileID: 6103529640182036219}
   m_Layer: 6
-  m_Name: Hex
+  m_Name: HexBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,6 +83,8 @@ MonoBehaviour:
   coordinates: {x: 0, y: 0, z: 0}
   selector: {fileID: 3491107020680756263}
   occupant: {fileID: 0}
+  type: 0
+  sprites: []
 --- !u!60 &6103529640182036219
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -189,7 +191,7 @@ SpriteRenderer:
   m_SortingLayerID: -269701193
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300108, guid: 8199c5ef781b3b842a2432aad7077b72, type: 3}
+  m_Sprite: {fileID: 21300110, guid: 8199c5ef781b3b842a2432aad7077b72, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -270,9 +272,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -269701193
-  m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingLayerID: 1178706557
+  m_SortingLayer: 2
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300086, guid: 8199c5ef781b3b842a2432aad7077b72, type: 3}
   m_Color: {r: 1, g: 0.7535237, b: 0, a: 1}
   m_FlipX: 0

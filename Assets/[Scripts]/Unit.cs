@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour
     public SpriteRenderer jobSprite;
 
     int level;
+    HexTile tile;
 
     [Header("Stats")]
     public float strength;
@@ -22,16 +23,15 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         raceSprite = GetComponent<SpriteRenderer>();
-        
     }
 
     // Start is called before the first frame update
     void Start()
     {
         SetupStats();
-        raceSprite.color = playerColor;
+        raceSprite.color = race.color;
         jobSprite.sprite = job.sprite;
-        jobSprite.color = race.color;
+        jobSprite.color = playerColor;
     }
 
     void SetupStats()
@@ -50,7 +50,11 @@ public class Unit : MonoBehaviour
 
     public void PlaceUnit(HexTile hex)
     {
+        if (tile)
+            tile.occupant = null;
+
         hex.occupant = this;
+        tile = hex;
         transform.position = hex.gameObject.transform.position;
     }
 }

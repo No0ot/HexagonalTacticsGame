@@ -11,6 +11,9 @@ public class BattleManager : MonoBehaviour
     public List<Unit> unitList = new List<Unit>();
     Queue<Unit> turnOrder = new Queue<Unit>();
     HexGrid grid;
+
+    public HexTile selectedTile { get; set; }
+    public Unit selectedUnit{ get; set; }
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -18,7 +21,7 @@ public class BattleManager : MonoBehaviour
         else
             Instance = this;
 
-
+        selectHex += SelectHex;
         grid = FindObjectOfType<HexGrid>();
     }
     // Start is called before the first frame update
@@ -28,7 +31,10 @@ public class BattleManager : MonoBehaviour
         foreach(Unit unit in unitList)
         {
             int temp = Random.Range(0, grid.hexList.Count);
-
+            while (grid.hexList[temp].occupant)
+            {
+                temp = Random.Range(0, grid.hexList.Count);
+            }
             unit.PlaceUnit(grid.hexList[temp]);
         }
 
@@ -36,6 +42,24 @@ public class BattleManager : MonoBehaviour
 
     void SelectHex(HexTile hex)
     {
+        if (!selectedUnit)
+        {
+            selectedTile = hex;
+            if (selectedTile.occupant)
+            {
+                selectedUnit = selectedTile.occupant;
+            }
+        }
+        else
+        {
+            selectedUnit.PlaceUnit(hex);
+            selectedUnit = null;
+        }
+    }
 
+    public void Unselect()
+    {
+        selectedUnit = null;
+        selectedTile = null;
     }
 }

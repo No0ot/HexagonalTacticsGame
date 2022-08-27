@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public enum HexType
+{
+	OPEN,
+	FOREST,
+	ROUGH,
+}
+
 public class HexTile : MonoBehaviour
 {
     public Vector3 coordinates;
@@ -19,6 +26,10 @@ public class HexTile : MonoBehaviour
 	//Methods
 
 	public Unit occupant;
+
+	public HexType type;
+
+	public List<SpriteRenderer> sprites;
 	public Vector2 hex_to_pixel( Vector3 h)
 	{
 		Orientation M = hexLayout.orientation;
@@ -26,6 +37,14 @@ public class HexTile : MonoBehaviour
 		float y = (M.f2 * h.x + M.f3 * h.y) * hexLayout.size.y;
 		return new Vector2(x + hexLayout.origin.x, y + hexLayout.origin.y);
 	}
+
+	public void SetSprites()
+    {
+		foreach(SpriteRenderer s in sprites)
+        {
+			s.sortingOrder -= (int)coordinates.y;
+        }
+    }
 
     private void OnMouseEnter()
     {

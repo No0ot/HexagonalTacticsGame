@@ -23,13 +23,36 @@ public class MouseController : MonoBehaviour
             mouseOverHex = hit.gameObject;
         }
         else
-            mouseOverHex = null;
-
-        if(Input.GetMouseButtonDown(0))
         {
-            HexTile hex = mouseOverHex.GetComponent<HexTile>();
-            BattleManager.Instance.selectHex?.Invoke(hex);
+            BattleManager.Instance.Unselect();
+            mouseOverHex = null;
         }
+
+        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + -Input.GetAxis("Mouse ScrollWheel"), 1.0f, 3.5f);
+
+        
+        float posY = camera.transform.position.y;
+        float posX = camera.transform.position.x;
+
+        if (Input.GetKey("w"))
+        {
+            posY = Mathf.Clamp(camera.transform.position.y + 0.1f, -3.0f, 3.0f);
+        }
+        else if (Input.GetKey("s"))
+        {
+            posY = Mathf.Clamp(camera.transform.position.y - 0.1f, -3.0f, 3.0f);
+        }
+
+        if (Input.GetKey("a"))
+        {
+            posX = Mathf.Clamp(camera.transform.position.x - 0.1f, -3.0f, 3.0f);
+        }
+        if (Input.GetKey("d"))
+        {
+            posX = Mathf.Clamp(camera.transform.position.x + 0.1f, -3.0f, 3.0f);
+        }
+
+        camera.transform.position = new Vector3(posX, posY, -10f);
     }
 
 }
