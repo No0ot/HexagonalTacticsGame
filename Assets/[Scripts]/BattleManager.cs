@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
     Queue<Unit> turnOrder = new Queue<Unit>();
     HexGrid grid;
 
+    public Unit currentTurnUnit = null;
     public HexTile selectedTile { get; set; }
     public Unit selectedUnit{ get; set; }
     private void Awake()
@@ -38,6 +39,7 @@ public class BattleManager : MonoBehaviour
             unit.PlaceUnit(grid.hexList[temp]);
         }
 
+        RoundStart();
     }
 
     void SelectHex(HexTile hex)
@@ -52,8 +54,11 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            selectedUnit.PlaceUnit(hex);
-            selectedUnit = null;
+            if (!hex.occupant)
+            {
+                selectedUnit.PlaceUnit(hex);
+                selectedUnit = null;
+            }
         }
     }
 
@@ -61,5 +66,45 @@ public class BattleManager : MonoBehaviour
     {
         selectedUnit = null;
         selectedTile = null;
+    }
+
+    public void RoundStart()
+    {
+        RollInitiative();
+
+        unitList.Sort(SortByInitiative);
+        foreach(Unit unit in unitList)
+        {
+            turnOrder.Enqueue(unit);
+        }
+
+        TurnStart();
+    }
+    static int SortByInitiative(Unit p1, Unit p2)
+    {
+        return -p1.initiative.CompareTo(-p2.initiative);
+    }
+
+    void RollInitiative()
+    {
+        foreach(Unit unit in unitList)
+        {
+            unit.RollInitiative();
+        }
+    }
+
+
+    public void TurnStart()
+    {
+        currentTurnUnit = turnOrder.Dequeue();
+
+        currentTurnUnit.Activate();
+        //Pass currenturnUnit into currenturnUnit UI(Bottom left)
+
+        //while(turnOrder.Count > 0)
+        //{
+        //    Unit temp = turnOrder.Dequeue();
+        //    Debug.Log(temp.gameObject.name);
+        //}
     }
 }

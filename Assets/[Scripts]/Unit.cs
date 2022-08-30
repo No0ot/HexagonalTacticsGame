@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour
     public Job job;
     public Color playerColor;
 
-    SpriteRenderer raceSprite;
+    public SpriteRenderer raceSprite;
     public SpriteRenderer jobSprite;
 
     int level;
@@ -20,18 +20,24 @@ public class Unit : MonoBehaviour
     public float concentration;
     public float resolve;
 
+    [Header("Battle Stats")]
+    public int initiative;
+    float maxHealth;
+    float currentHealth;
+
     private void Awake()
     {
         raceSprite = GetComponent<SpriteRenderer>();
+        SetupStats();
+        raceSprite.color = playerColor;
+        jobSprite.sprite = job.sprite;
+        jobSprite.color = playerColor;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        SetupStats();
-        raceSprite.color = race.color;
-        jobSprite.sprite = job.sprite;
-        jobSprite.color = playerColor;
+        
     }
 
     void SetupStats()
@@ -42,12 +48,6 @@ public class Unit : MonoBehaviour
         resolve = race.baseResolve + (race.growthResolve * level) + (job.growthStrength * level);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void PlaceUnit(HexTile hex)
     {
         if (tile)
@@ -56,5 +56,21 @@ public class Unit : MonoBehaviour
         hex.occupant = this;
         tile = hex;
         transform.position = hex.gameObject.transform.position;
+    }
+
+    public void RollInitiative()
+    {
+        initiative = Random.Range(1, 21) + job.initiativeBonus;
+    }
+
+    public void Activate()
+    {
+        Debug.Log("activatijng");
+        raceSprite.color = Color.yellow;
+    }
+
+    public void Deactivate()
+    {
+        raceSprite.color = playerColor;
     }
 }

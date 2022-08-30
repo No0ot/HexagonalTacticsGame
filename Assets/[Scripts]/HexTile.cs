@@ -16,7 +16,7 @@ public class HexTile : MonoBehaviour
 	//References
 	public GameObject selector;
 
-
+	Color selectorColor;
 
 	//Layout and Orientation stuff
 	static Orientation pointyOrientation = new Orientation( Mathf.Sqrt(3.0f), Mathf.Sqrt(3.0f) / 2.0f, 0.0f, 3.0f / 2.0f,
@@ -30,7 +30,13 @@ public class HexTile : MonoBehaviour
 	public HexType type;
 
 	public List<SpriteRenderer> sprites;
-	public Vector2 hex_to_pixel( Vector3 h)
+
+    private void Awake()
+    {
+		selectorColor = selector.GetComponent<SpriteRenderer>().color;
+    }
+
+    public Vector2 hex_to_pixel( Vector3 h)
 	{
 		Orientation M = hexLayout.orientation;
 		float x = (M.f0 * h.x + M.f1 * h.y) * hexLayout.size.x;
@@ -58,5 +64,11 @@ public class HexTile : MonoBehaviour
     private void OnMouseDown()
     {
 		BattleManager.Instance.selectHex?.Invoke(this);
+		selector.GetComponent<SpriteRenderer>().color = Color.red;
+	}
+
+    private void OnMouseUp()
+    {
+		selector.GetComponent<SpriteRenderer>().color = selectorColor;
 	}
 }

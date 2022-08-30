@@ -15,6 +15,10 @@ public class Job : ScriptableObject
     public float growthConcentration;
     public float growthResolve;
 
+    [Header("Combat Stats")]
+    public int initiativeBonus;
+
+
     public Sprite sprite;
 
 

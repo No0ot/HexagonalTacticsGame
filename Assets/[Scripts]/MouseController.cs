@@ -24,7 +24,7 @@ public class MouseController : MonoBehaviour
         }
         else
         {
-            BattleManager.Instance.Unselect();
+            //BattleManager.Instance.Unselect();
             mouseOverHex = null;
         }
 
