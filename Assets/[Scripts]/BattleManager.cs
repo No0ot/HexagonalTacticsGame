@@ -15,6 +15,9 @@ public class BattleManager : MonoBehaviour
     public Unit currentTurnUnit = null;
     public HexTile selectedTile { get; set; }
     public Unit selectedUnit{ get; set; }
+
+    public ProfileViewer currentUnitProfile;
+    public ProfileViewer selectedUnitProfile;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -50,14 +53,17 @@ public class BattleManager : MonoBehaviour
             if (selectedTile.occupant)
             {
                 selectedUnit = selectedTile.occupant;
+                selectedUnitProfile.UpdateProfile(selectedUnit);
             }
         }
         else
         {
             if (!hex.occupant)
             {
-                selectedUnit.PlaceUnit(hex);
+                //move is done here for now but later the hex will need to be passed to an object that will determine whether a move or attack or rotation needs to be done.
+                currentTurnUnit.PlaceUnit(hex);
                 selectedUnit = null;
+                selectedUnitProfile.UpdateProfile(null);
             }
         }
     }
@@ -93,13 +99,14 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-
     public void TurnStart()
     {
         currentTurnUnit = turnOrder.Dequeue();
 
         currentTurnUnit.Activate();
+
         //Pass currenturnUnit into currenturnUnit UI(Bottom left)
+        currentUnitProfile.UpdateProfile(currentTurnUnit);
 
         //while(turnOrder.Count > 0)
         //{

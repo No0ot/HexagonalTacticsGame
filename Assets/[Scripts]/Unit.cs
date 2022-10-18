@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public string name;
     public Race race;
     public Job job;
     public Color playerColor;
@@ -22,8 +23,8 @@ public class Unit : MonoBehaviour
 
     [Header("Battle Stats")]
     public int initiative;
-    float maxHealth;
-    float currentHealth;
+    public float maxHealth;
+    public float currentHealth;
 
     private void Awake()
     {
@@ -46,6 +47,9 @@ public class Unit : MonoBehaviour
         finesse = race.baseFinesse + (race.growthFinesse * level) + (job.growthFinesse * level);
         concentration = race.baseConcentration + (race.growthConcentration * level) + (job.growthConcentration * level);
         resolve = race.baseResolve + (race.growthResolve * level) + (job.growthStrength * level);
+
+        currentHealth = maxHealth = Mathf.Round(strength * 9.6f);
+        
     }
 
     public void PlaceUnit(HexTile hex)

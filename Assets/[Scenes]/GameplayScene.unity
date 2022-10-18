@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skills
+  m_text: Skill3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -269,13 +269,14 @@ GameObject:
   - component: {fileID: 42794950}
   - component: {fileID: 42794952}
   - component: {fileID: 42794951}
+  - component: {fileID: 42794953}
   m_Layer: 5
   m_Name: SelectedUnitPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &42794950
 RectTransform:
   m_ObjectHideFlags: 0
@@ -337,6 +338,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 42794949}
   m_CullTransparentMesh: 1
+--- !u!114 &42794953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42794949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f8bb0fa26fc204ab8eb258080ec7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitReference: {fileID: 0}
+  name: {fileID: 111557770}
+  job: {fileID: 1177647109}
+  race: {fileID: 255915243}
+  health: {fileID: 1989840036}
+  healthBar: {fileID: 1584041103}
+  image: {fileID: 897173408}
 --- !u!1 &68073910
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,7 +383,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68073910}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -371,13 +391,13 @@ RectTransform:
   - {fileID: 135245246}
   - {fileID: 1223639971}
   - {fileID: 792236402}
-  m_Father: {fileID: 227649994}
-  m_RootOrder: 4
+  m_Father: {fileID: 1773831207}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 102.29999, y: -420}
-  m_SizeDelta: {x: -1600, y: -1010}
+  m_AnchoredPosition: {x: 0.4249878, y: 75}
+  m_SizeDelta: {x: 121.25, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &68073912
 MonoBehaviour:
@@ -555,6 +575,8 @@ MonoBehaviour:
   - {fileID: 1705683672}
   - {fileID: 216076657}
   currentTurnUnit: {fileID: 0}
+  currentUnitProfile: {fileID: 745922388}
+  selectedUnitProfile: {fileID: 42794953}
 --- !u!4 &97128686
 Transform:
   m_ObjectHideFlags: 0
@@ -767,7 +789,7 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -947,6 +969,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
+      propertyPath: name
+      value: Ja'Bor Alarakasta
+      objectReference: {fileID: 0}
+    - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: race
       value: 
       objectReference: {fileID: 11400000, guid: 29291b55ce734ac4fb211b31fbf2e971, type: 2}
@@ -977,7 +1003,7 @@ GameObject:
   - component: {fileID: 135245248}
   - component: {fileID: 135245247}
   m_Layer: 5
-  m_Name: Move
+  m_Name: Skill1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -999,10 +1025,10 @@ RectTransform:
   m_Father: {fileID: 68073911}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 55, y: -35}
+  m_SizeDelta: {x: 100, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &135245247
 MonoBehaviour:
@@ -1167,7 +1193,6 @@ RectTransform:
   - {fileID: 745922385}
   - {fileID: 42794950}
   - {fileID: 1424641673}
-  - {fileID: 68073911}
   m_Father: {fileID: 544794953}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1556,6 +1581,10 @@ PrefabInstance:
     - target: {fileID: 2137507409457110486, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
+      propertyPath: name
+      value: Ilkalan Sunstar
       objectReference: {fileID: 0}
     - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: race
@@ -2829,6 +2858,7 @@ GameObject:
   - component: {fileID: 745922385}
   - component: {fileID: 745922387}
   - component: {fileID: 745922386}
+  - component: {fileID: 745922388}
   m_Layer: 5
   m_Name: CurrentTurnUnitPanel
   m_TagString: Untagged
@@ -2897,6 +2927,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745922384}
   m_CullTransparentMesh: 1
+--- !u!114 &745922388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745922384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f8bb0fa26fc204ab8eb258080ec7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitReference: {fileID: 0}
+  name: {fileID: 1455888268}
+  job: {fileID: 1656618065}
+  race: {fileID: 505703498}
+  health: {fileID: 328394539}
+  healthBar: {fileID: 1794014594}
+  image: {fileID: 1322986610}
 --- !u!1 &792236401
 GameObject:
   m_ObjectHideFlags: 0
@@ -2910,7 +2959,7 @@ GameObject:
   - component: {fileID: 792236404}
   - component: {fileID: 792236403}
   m_Layer: 5
-  m_Name: Skills
+  m_Name: Skill3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2932,10 +2981,10 @@ RectTransform:
   m_Father: {fileID: 68073911}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 265, y: -35}
+  m_SizeDelta: {x: 100, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &792236403
 MonoBehaviour:
@@ -3400,10 +3449,10 @@ RectTransform:
   m_Father: {fileID: 1424641673}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 308.125, y: -35}
+  m_SizeDelta: {x: 198.75, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &960717375
 MonoBehaviour:
@@ -3612,7 +3661,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Attack
+  m_text: Skill2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4046,7 +4095,7 @@ GameObject:
   - component: {fileID: 1223639973}
   - component: {fileID: 1223639972}
   m_Layer: 5
-  m_Name: Attack
+  m_Name: Skill2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4068,10 +4117,10 @@ RectTransform:
   m_Father: {fileID: 68073911}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 160, y: -35}
+  m_SizeDelta: {x: 100, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1223639972
 MonoBehaviour:
@@ -4401,7 +4450,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1424641673
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4575,10 +4624,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 40.25
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -4828,10 +4877,10 @@ RectTransform:
   m_Father: {fileID: 1424641673}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 104.375, y: -35}
+  m_SizeDelta: {x: 198.75, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1591422959
 MonoBehaviour:
@@ -5320,7 +5369,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Move
+  m_text: Skill1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5440,13 +5489,14 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 403201433}
+  - {fileID: 68073911}
   m_Father: {fileID: 1424641673}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 511.875, y: -35}
+  m_SizeDelta: {x: 198.75, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1773831208
 MonoBehaviour:
@@ -5706,10 +5756,10 @@ RectTransform:
   m_Father: {fileID: 1424641673}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 715.625, y: -35}
+  m_SizeDelta: {x: 198.75, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1839167445
 MonoBehaviour:
@@ -5923,6 +5973,10 @@ PrefabInstance:
     - target: {fileID: 2137507409457110486, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
+      propertyPath: name
+      value: Rok
       objectReference: {fileID: 0}
     - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: race
@@ -6337,7 +6391,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -1.2550049, y: 0}
   m_SizeDelta: {x: 7.49, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6433,6 +6487,10 @@ PrefabInstance:
     - target: {fileID: 2137507409457110486, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
+      propertyPath: name
+      value: Arik Palostir
       objectReference: {fileID: 0}
     - target: {fileID: 2137507409457110487, guid: f5a7f9c6283499d4d8e8477ebc4ddc13, type: 3}
       propertyPath: playerColor.a
