@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TurnPhase
+{
+    NONE,
+    MOVE,
+    ATTACK,
+    SKILL,
+    FACE
+}
+
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance { get; private set; }
@@ -16,8 +25,8 @@ public class BattleManager : MonoBehaviour
     public HexTile selectedTile { get; set; }
     public Unit selectedUnit{ get; set; }
 
-    public ProfileViewer currentUnitProfile;
-    public ProfileViewer selectedUnitProfile;
+    TurnPhase phase;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -47,25 +56,52 @@ public class BattleManager : MonoBehaviour
 
     void SelectHex(HexTile hex)
     {
-        if (!selectedUnit)
+        switch (phase)
         {
-            selectedTile = hex;
-            if (selectedTile.occupant)
-            {
-                selectedUnit = selectedTile.occupant;
-                selectedUnitProfile.UpdateProfile(selectedUnit);
-            }
+            case TurnPhase.MOVE:
+                if (!selectedUnit)
+                {
+                    selectedTile = hex;
+                    if (selectedTile.occupant)
+                    {
+                        selectedUnit = selectedTile.occupant;
+                        UIManager.Instance.selectedUnitProfile.UpdateProfile(selectedUnit);
+                    }
+                }
+                else
+                {
+                    if (!hex.occupant)
+                    {
+                        //move is done here for now but later the hex will need to be passed to an object that will determine whether a move or attack or rotation needs to be done.
+                        currentTurnUnit.PlaceUnit(hex);
+                        selectedUnit = null;
+                        UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
+                    }
+                }
+                break;
+            case TurnPhase.ATTACK:
+                break;
+            case TurnPhase.SKILL:
+                break;
+            case TurnPhase.FACE:
+
+                for(int i = 0; i < currentTurnUnit.tile.neighbours.Count; i++)
+                {
+                    if (currentTurnUnit.tile.neighbours[i])
+                    {
+                        if(currentTurnUnit.tile.neighbours[i] == hex)
+                        {
+                            currentTurnUnit.RotateTowards((HexDirection)i);
+                            EndTurn();
+                        }
+                    }
+                }
+
+                break;
+            default:
+                break;
         }
-        else
-        {
-            if (!hex.occupant)
-            {
-                //move is done here for now but later the hex will need to be passed to an object that will determine whether a move or attack or rotation needs to be done.
-                currentTurnUnit.PlaceUnit(hex);
-                selectedUnit = null;
-                selectedUnitProfile.UpdateProfile(null);
-            }
-        }
+        
     }
 
     public void Unselect()
@@ -78,7 +114,8 @@ public class BattleManager : MonoBehaviour
     {
         RollInitiative();
 
-        unitList.Sort(SortByInitiative);
+        InitComparison comp = new InitComparison();
+        unitList.Sort(comp);
         foreach(Unit unit in unitList)
         {
             turnOrder.Enqueue(unit);
@@ -101,17 +138,61 @@ public class BattleManager : MonoBehaviour
 
     public void TurnStart()
     {
+        phase = TurnPhase.NONE;
         currentTurnUnit = turnOrder.Dequeue();
 
         currentTurnUnit.Activate();
 
         //Pass currenturnUnit into currenturnUnit UI(Bottom left)
-        currentUnitProfile.UpdateProfile(currentTurnUnit);
+        UIManager.Instance.currentUnitProfile.UpdateProfile(currentTurnUnit);
+
+        UIManager.Instance.actionBar.SetActive(true);
 
         //while(turnOrder.Count > 0)
         //{
         //    Unit temp = turnOrder.Dequeue();
         //    Debug.Log(temp.gameObject.name);
         //}
+    }
+
+    public void HighlightTiles()
+    {
+        List<HexTile> highlightedTiles = new List<HexTile>();
+
+        switch(phase)
+        {
+            case TurnPhase.MOVE:
+                break;
+            case TurnPhase.ATTACK:
+                break;
+            case TurnPhase.SKILL:
+                break;
+            case TurnPhase.FACE:
+                highlightedTiles = currentTurnUnit.tile.neighbours;
+                foreach(HexTile tile in highlightedTiles)
+                {
+                    if(tile)
+                        tile.ActivateHighlight(HighlightColor.FACE);
+                }
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void FaceUnit()
+    {
+        phase = TurnPhase.FACE;
+        HighlightTiles();
+    }
+
+    public void EndTurn()
+    {
+        currentTurnUnit.Deactivate();
+        if (turnOrder.Count > 0)
+            TurnStart();
+        else
+            RoundStart();
     }
 }

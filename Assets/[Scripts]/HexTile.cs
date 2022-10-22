@@ -10,12 +10,33 @@ public enum HexType
 	ROUGH,
 }
 
+public enum HighlightColor
+{
+	MOVE,
+	DASH,
+	ATTACK,
+	SKILL,
+	FACE
+}
+
+public enum HexDirection
+{
+	RIGHT,
+	RIGHTDOWN,
+	LEFTDOWN,
+	LEFT,
+	LEFTUP,
+	RIGHTUP
+
+}
+
 public class HexTile : MonoBehaviour
 {
-    public Vector3 coordinates;
+    public Vector3Int coordinates;
 	//References
 	public GameObject selector;
-
+	public SpriteRenderer highlight;
+	public Color[] highlightColors;
 	Color selectorColor;
 
 	//Layout and Orientation stuff
@@ -30,6 +51,8 @@ public class HexTile : MonoBehaviour
 	public HexType type;
 
 	public List<SpriteRenderer> sprites;
+
+	public List<HexTile> neighbours = new List<HexTile>();
 
     private void Awake()
     {
@@ -70,5 +93,16 @@ public class HexTile : MonoBehaviour
     private void OnMouseUp()
     {
 		selector.GetComponent<SpriteRenderer>().color = selectorColor;
+	}
+
+	public void ActivateHighlight(HighlightColor color)
+    {
+		highlight.gameObject.SetActive(true);
+		highlight.color = highlightColors[(int)color];
+    }
+
+	public void DeactivateHighlight()
+    {
+		highlight.gameObject.SetActive(false);
 	}
 }

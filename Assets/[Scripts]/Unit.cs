@@ -2,6 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public class InitComparison : IComparer<Unit>
+{
+    public int Compare(Unit x, Unit y)
+    {
+        if (x.initiative == 0 || y.initiative == 0)
+            return 0;
+
+        return y.initiative.CompareTo(x.initiative);
+    }
+}
+
 public class Unit : MonoBehaviour
 {
     public string name;
@@ -13,7 +25,7 @@ public class Unit : MonoBehaviour
     public SpriteRenderer jobSprite;
 
     int level;
-    HexTile tile;
+    public HexTile tile;
 
     [Header("Stats")]
     public float strength;
@@ -33,6 +45,10 @@ public class Unit : MonoBehaviour
         raceSprite.color = playerColor;
         jobSprite.sprite = job.sprite;
         jobSprite.color = playerColor;
+
+        int rand = Random.Range(1, 7);
+        Vector3 zRotation = new Vector3(0f, 0f,30f + rand * 60f);
+        transform.rotation = Quaternion.Euler(zRotation);
     }
 
     // Start is called before the first frame update
@@ -76,5 +92,33 @@ public class Unit : MonoBehaviour
     public void Deactivate()
     {
         raceSprite.color = playerColor;
+    }
+
+    public void RotateTowards(HexDirection direction)
+    {
+        float angle = 30f;
+        switch(direction)
+        {
+            case HexDirection.RIGHT:
+                angle = 270f;
+                break;
+            case HexDirection.RIGHTDOWN:
+                angle = 210f;
+                break;
+            case HexDirection.LEFTDOWN:
+                angle = 150f;
+                break;
+            case HexDirection.LEFT:
+                angle = 90f;
+                break;
+            case HexDirection.LEFTUP:
+                angle = 30f;
+                break;
+            case HexDirection.RIGHTUP:
+                angle = 330f;
+                break;
+        }
+        Vector3 zRotation = new Vector3(0f, 0f, angle);
+        transform.rotation = Quaternion.Euler(zRotation);
     }
 }
