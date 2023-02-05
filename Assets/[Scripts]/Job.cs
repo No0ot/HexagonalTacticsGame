@@ -17,7 +17,8 @@ public class Job : ScriptableObject
 
     [Header("Combat Stats")]
     public int initiativeBonus;
-
+    public int movementRange;
+    public int dashRange;
 
     public Sprite sprite;
 

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class HexGrid : MonoBehaviour
 {
     public List<HexTile> hexPrefabs;
     public int mapRadius;
 
+    public List<HexTile> highlightedTiles = new List<HexTile>();
     public List<HexTile> hexList = new List<HexTile>();
 
     static List<Vector3Int> directions = new List<Vector3Int>() { new Vector3Int(1,0,-1), new Vector3Int(1,-1,0), new Vector3Int(0,-1,1), new Vector3Int(-1,0,1), new Vector3Int(-1,1,0), new Vector3Int(0,1,-1) };
@@ -63,5 +65,58 @@ public class HexGrid : MonoBehaviour
             tile.neighbours.Add(GetHex(temp + directions[i]));
         }
     }
+
+    public List<HexTile> GetReachableHexes(HexTile startinghex, int range)
+    {
+        LinkedList<HexTile> frontier = new LinkedList<HexTile>();
+        frontier.AddLast(startinghex);
+        HexTile current = frontier.First.Value;
+        current.localValue = 0.0f;
+
+        List<HexTile> reached = new List<HexTile>();
+        while(frontier.Count > 0 && current.localValue < range)
+        {
+            //frontier.OrderBy((p1, p2) => p1.localValue.CompareTo(p2.localValue));
+            frontier.OrderByDescending(p1 => p1.localValue);
+
+            while(frontier.Count > 0 && frontier.First.Value.pathfindingVisited)
+            {
+                frontier.RemoveFirst();
+            }
+
+            if (frontier.Count == 0)
+                break;
+
+            current = frontier.First.Value;
+            current.pathfindingVisited = true;
+            foreach(HexTile hex in current.neighbours)
+            {
+                if (hex == null)
+                    continue;
+                float templocal = current.localValue + hex.pathfindingCost;
+                if (hex.type != HexType.FOREST && templocal < hex.localValue)
+                    hex.localValue = templocal;
+
+                if (hex.type != HexType.FOREST && !hex.pathfindingVisited && hex.localValue <= range)
+                {
+                    frontier.AddLast(hex);
+                    reached.Add(hex);
+                }
+                else
+                    continue;
+            }
+        }
+        return reached;
+    }
     
+    public void ResetTiles()
+    {
+        foreach(HexTile tile in hexList)
+        {
+            tile.pathfindingVisited = false;
+            tile.localValue = 100;
+            tile.ActivateHighlight(HighlightColor.NONE);
+            highlightedTiles.Clear();
+        }
+    }
 }

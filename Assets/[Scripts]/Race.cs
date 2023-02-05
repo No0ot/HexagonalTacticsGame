@@ -22,5 +22,8 @@ public class Race : ScriptableObject
 
     public Color color;
 
+    public int bonusMovement;
+    public int bonusDash;
+
     //passive abilities
 }

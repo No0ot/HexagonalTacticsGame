@@ -432,6 +432,14 @@ PrefabInstance:
       value: HexOpen
       objectReference: {fileID: 0}
     - target: {fileID: 1322765930438733096, guid: 6c404a767a8e92c49834349ba6448b51, type: 3}
+      propertyPath: localValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1322765930438733096, guid: 6c404a767a8e92c49834349ba6448b51, type: 3}
+      propertyPath: pathfindingCost
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1322765930438733096, guid: 6c404a767a8e92c49834349ba6448b51, type: 3}
       propertyPath: sprites.Array.size
       value: 5
       objectReference: {fileID: 0}

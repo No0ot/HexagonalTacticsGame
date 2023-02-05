@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum TurnPhase
 {
     NONE,
@@ -26,6 +27,8 @@ public class BattleManager : MonoBehaviour
     public Unit selectedUnit{ get; set; }
 
     TurnPhase phase;
+    bool canMove = true;
+
 
     private void Awake()
     {
@@ -59,23 +62,33 @@ public class BattleManager : MonoBehaviour
         switch (phase)
         {
             case TurnPhase.MOVE:
-                if (!selectedUnit)
+                //if (!selectedUnit)
+                //{
+                //    selectedTile = hex;
+                //    if (selectedTile.occupant)
+                //    {
+                //        selectedUnit = selectedTile.occupant;
+                //        UIManager.Instance.selectedUnitProfile.UpdateProfile(selectedUnit);
+                //    }
+                //}
+                //else
+                //{
+                //    if (!hex.occupant)
+                //    {
+                //        //move is done here for now but later the hex will need to be passed to an object that will determine whether a move or attack or rotation needs to be done.
+                //        currentTurnUnit.PlaceUnit(hex);
+                //        selectedUnit = null;
+                //        UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
+                //    }
+                //}
+                foreach(HexTile tile in grid.highlightedTiles)
                 {
-                    selectedTile = hex;
-                    if (selectedTile.occupant)
+                    if(hex == tile)
                     {
-                        selectedUnit = selectedTile.occupant;
-                        UIManager.Instance.selectedUnitProfile.UpdateProfile(selectedUnit);
-                    }
-                }
-                else
-                {
-                    if (!hex.occupant)
-                    {
-                        //move is done here for now but later the hex will need to be passed to an object that will determine whether a move or attack or rotation needs to be done.
                         currentTurnUnit.PlaceUnit(hex);
-                        selectedUnit = null;
-                        UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
+                        UIManager.Instance.DisableAction(0);
+                        grid.ResetTiles();
+                        break;
                     }
                 }
                 break;
@@ -147,7 +160,7 @@ public class BattleManager : MonoBehaviour
         UIManager.Instance.currentUnitProfile.UpdateProfile(currentTurnUnit);
 
         UIManager.Instance.actionBar.SetActive(true);
-
+        UIManager.Instance.ResetActions();
         //while(turnOrder.Count > 0)
         //{
         //    Unit temp = turnOrder.Dequeue();
@@ -157,19 +170,23 @@ public class BattleManager : MonoBehaviour
 
     public void HighlightTiles()
     {
-        List<HexTile> highlightedTiles = new List<HexTile>();
-
         switch(phase)
         {
             case TurnPhase.MOVE:
+                grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.movementRange);
+                foreach (HexTile tile in grid.highlightedTiles)
+                {
+                    if (tile)
+                        tile.ActivateHighlight(HighlightColor.MOVE);
+                }
                 break;
             case TurnPhase.ATTACK:
                 break;
             case TurnPhase.SKILL:
                 break;
             case TurnPhase.FACE:
-                highlightedTiles = currentTurnUnit.tile.neighbours;
-                foreach(HexTile tile in highlightedTiles)
+                grid.highlightedTiles = currentTurnUnit.tile.neighbours;
+                foreach(HexTile tile in grid.highlightedTiles)
                 {
                     if(tile)
                         tile.ActivateHighlight(HighlightColor.FACE);
@@ -187,8 +204,21 @@ public class BattleManager : MonoBehaviour
         HighlightTiles();
     }
 
+    public void MoveUnit()
+    {
+        phase = TurnPhase.MOVE;
+        HighlightTiles();
+    }
+
     public void EndTurn()
     {
+        foreach (HexTile tile in grid.highlightedTiles)
+        {
+            if (tile)
+                tile.ActivateHighlight(HighlightColor.NONE);
+        }
+        canMove = true;
+        grid.ResetTiles();
         currentTurnUnit.Deactivate();
         if (turnOrder.Count > 0)
             TurnStart();

@@ -37,6 +37,8 @@ public class Unit : MonoBehaviour
     public int initiative;
     public float maxHealth;
     public float currentHealth;
+    public int movementRange;
+    public int dashRange;
 
     private void Awake()
     {
@@ -65,7 +67,9 @@ public class Unit : MonoBehaviour
         resolve = race.baseResolve + (race.growthResolve * level) + (job.growthStrength * level);
 
         currentHealth = maxHealth = Mathf.Round(strength * 9.6f);
-        
+
+        movementRange = job.movementRange + race.bonusMovement;
+        dashRange = job.dashRange + race.bonusDash;
     }
 
     public void PlaceUnit(HexTile hex)

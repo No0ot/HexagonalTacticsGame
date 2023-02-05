@@ -85,6 +85,7 @@ MonoBehaviour:
   selector: {fileID: 3491107020680756263}
   highlight: {fileID: 3747457610586816701}
   highlightColors:
+  - {r: 1, g: 1, b: 1, a: 0}
   - {r: 0, g: 0.203542, b: 1, a: 0.5019608}
   - {r: 0, g: 0.92019224, b: 1, a: 0.5019608}
   - {r: 0.9433962, g: 0, b: 0, a: 0.5019608}
@@ -93,6 +94,7 @@ MonoBehaviour:
   occupant: {fileID: 0}
   type: 0
   sprites: []
+  neighbours: []
 --- !u!60 &6103529640182036219
 PolygonCollider2D:
   m_ObjectHideFlags: 0

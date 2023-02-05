@@ -12,6 +12,7 @@ public enum HexType
 
 public enum HighlightColor
 {
+	NONE,
 	MOVE,
 	DASH,
 	ATTACK,
@@ -53,6 +54,10 @@ public class HexTile : MonoBehaviour
 	public List<SpriteRenderer> sprites;
 
 	public List<HexTile> neighbours = new List<HexTile>();
+	public float pathfindingCost;
+	public float localValue = 100;
+	public float globalValue;
+	public bool pathfindingVisited = false;
 
     private void Awake()
     {
