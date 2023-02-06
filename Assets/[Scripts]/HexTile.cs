@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public class LocalValueComparison : IComparer<HexTile>
+{
+	public int Compare(HexTile x, HexTile y)
+	{
+		if (x.localValue == 0 || y.localValue == 0)
+			return 0;
+
+		return x.localValue.CompareTo(y.localValue);
+	}
+}
+
 public enum HexType
 {
 	OPEN,

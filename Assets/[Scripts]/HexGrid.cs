@@ -23,8 +23,15 @@ public class HexGrid : MonoBehaviour
 
             for (int r = r1; r <= r2; r++)
             {
-                int rand = Random.Range(0,hexPrefabs.Count);
-                HexTile temp = Instantiate(hexPrefabs[rand], this.transform);
+                int rand = Random.Range(0,5);
+                int type;
+                if (rand == 4)
+                    type = 2;
+                else if (rand == 3)
+                    type = 1;
+                else
+                    type = 0;
+                HexTile temp = Instantiate(hexPrefabs[type], this.transform);
                 temp.coordinates = new Vector3Int(q, r, -q - r);
                 temp.SetSprites();
                 hexList.Add(temp);
@@ -66,40 +73,84 @@ public class HexGrid : MonoBehaviour
         }
     }
 
+    //public List<HexTile> GetReachableHexes(HexTile startinghex, int range)
+    //{
+    //    LinkedList<HexTile> frontier = new LinkedList<HexTile>();
+    //    frontier.AddLast(startinghex);
+    //    HexTile current = frontier.First.Value;
+    //    current.localValue = 0.0f;
+    //
+    //    List<HexTile> reached = new List<HexTile>();
+    //    while(frontier.Count > 0 && current.localValue < range)
+    //    {
+    //        //frontier.OrderBy((p1, p2) => p1.localValue.CompareTo(p2.localValue));
+    //        frontier.OrderBy(p1 => p1.localValue);
+    //
+    //        while(frontier.Count > 0 && frontier.First.Value.pathfindingVisited)
+    //        {
+    //            frontier.RemoveFirst();
+    //        }
+    //
+    //        if (frontier.Count == 0)
+    //            break;
+    //
+    //        current = frontier.First.Value;
+    //        current.pathfindingVisited = true;
+    //        foreach(HexTile hex in current.neighbours)
+    //        {
+    //            if (hex == null)
+    //                continue;
+    //            float templocal = current.localValue + hex.pathfindingCost;
+    //            if (hex.type != HexType.FOREST && templocal < hex.localValue && !hex.occupant)
+    //                hex.localValue = templocal;
+    //
+    //            if (hex.type != HexType.FOREST && !hex.pathfindingVisited && hex.localValue <= range && !hex.occupant)
+    //            {
+    //                frontier.AddLast(hex);
+    //                reached.Add(hex);
+    //            }
+    //            else
+    //                continue;
+    //        }
+    //    }
+    //    return reached;
+    //}
+
     public List<HexTile> GetReachableHexes(HexTile startinghex, int range)
     {
-        LinkedList<HexTile> frontier = new LinkedList<HexTile>();
-        frontier.AddLast(startinghex);
-        HexTile current = frontier.First.Value;
+        List<HexTile> frontier = new List<HexTile>();
+        frontier.Add(startinghex);
+        HexTile current = frontier[0];
         current.localValue = 0.0f;
 
         List<HexTile> reached = new List<HexTile>();
-        while(frontier.Count > 0 && current.localValue < range)
+        while (frontier.Count > 0 && current.localValue < range)
         {
             //frontier.OrderBy((p1, p2) => p1.localValue.CompareTo(p2.localValue));
-            frontier.OrderByDescending(p1 => p1.localValue);
+            LocalValueComparison value = new LocalValueComparison();
+            frontier.Sort(new LocalValueComparison());
 
-            while(frontier.Count > 0 && frontier.First.Value.pathfindingVisited)
+            while (frontier.Count > 0 && frontier[0].pathfindingVisited)
             {
-                frontier.RemoveFirst();
+                frontier.RemoveAt(0);
             }
 
             if (frontier.Count == 0)
                 break;
 
-            current = frontier.First.Value;
+            current = frontier[0];
             current.pathfindingVisited = true;
-            foreach(HexTile hex in current.neighbours)
+            foreach (HexTile hex in current.neighbours)
             {
                 if (hex == null)
                     continue;
                 float templocal = current.localValue + hex.pathfindingCost;
-                if (hex.type != HexType.FOREST && templocal < hex.localValue)
+                if (hex.type != HexType.FOREST && templocal < hex.localValue && !hex.occupant)
                     hex.localValue = templocal;
 
-                if (hex.type != HexType.FOREST && !hex.pathfindingVisited && hex.localValue <= range)
+                if (hex.type != HexType.FOREST && !hex.pathfindingVisited && hex.localValue <= range && !hex.occupant)
                 {
-                    frontier.AddLast(hex);
+                    frontier.Add(hex);
                     reached.Add(hex);
                 }
                 else
@@ -108,7 +159,7 @@ public class HexGrid : MonoBehaviour
         }
         return reached;
     }
-    
+
     public void ResetTiles()
     {
         foreach(HexTile tile in hexList)
@@ -116,7 +167,16 @@ public class HexGrid : MonoBehaviour
             tile.pathfindingVisited = false;
             tile.localValue = 100;
             tile.ActivateHighlight(HighlightColor.NONE);
-            highlightedTiles.Clear();
+        }
+        highlightedTiles.Clear();
+    }
+
+    public void ResetHexPathfindingValues()
+    {
+        foreach (HexTile tile in hexList)
+        {
+            tile.pathfindingVisited = false;
+            tile.localValue = 100;
         }
     }
 }

@@ -47,7 +47,7 @@ public class BattleManager : MonoBehaviour
         foreach(Unit unit in unitList)
         {
             int temp = Random.Range(0, grid.hexList.Count);
-            while (grid.hexList[temp].occupant)
+            while (grid.hexList[temp].occupant || grid.hexList[temp].type == HexType.FOREST)
             {
                 temp = Random.Range(0, grid.hexList.Count);
             }
@@ -174,10 +174,19 @@ public class BattleManager : MonoBehaviour
         {
             case TurnPhase.MOVE:
                 grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.movementRange);
+                grid.ResetHexPathfindingValues();
+                List<HexTile> temp = new List<HexTile>();
+                temp = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.dashRange);
                 foreach (HexTile tile in grid.highlightedTiles)
                 {
                     if (tile)
                         tile.ActivateHighlight(HighlightColor.MOVE);
+                }
+
+                foreach (HexTile tile in temp)
+                {
+                    if (tile)
+                        tile.ActivateHighlight(HighlightColor.DASH);
                 }
                 break;
             case TurnPhase.ATTACK:
@@ -185,7 +194,12 @@ public class BattleManager : MonoBehaviour
             case TurnPhase.SKILL:
                 break;
             case TurnPhase.FACE:
-                grid.highlightedTiles = currentTurnUnit.tile.neighbours;
+                List<HexTile> neighbours = new List<HexTile>();
+                foreach(HexTile n in currentTurnUnit.tile.neighbours)
+                {
+                    neighbours.Add(n);
+                }
+                grid.highlightedTiles = neighbours;
                 foreach(HexTile tile in grid.highlightedTiles)
                 {
                     if(tile)
