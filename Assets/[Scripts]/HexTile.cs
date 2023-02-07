@@ -75,6 +75,17 @@ public class HexTile : MonoBehaviour
 		selectorColor = selector.GetComponent<SpriteRenderer>().color;
     }
 
+	public float ComputeGlobalValue(Vector3Int goalcoordiante)
+    {
+		Vector3Int a = coordinates;
+		Vector3Int b = goalcoordiante;
+
+		float value = (Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z)) / 2;
+
+		globalValue = value;
+		return globalValue;
+    }
+
     public Vector2 hex_to_pixel( Vector3 h)
 	{
 		Orientation M = hexLayout.orientation;

@@ -19,6 +19,7 @@ public class Job : ScriptableObject
     public int initiativeBonus;
     public int movementRange;
     public int dashRange;
+    public int attackRange;
 
     public Sprite sprite;
 

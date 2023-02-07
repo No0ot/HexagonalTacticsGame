@@ -55,6 +55,14 @@ public class HexGrid : MonoBehaviour
         return null;
     }
 
+    public void RecomputeGlobalValues(Vector3Int goal)
+    {
+        foreach(HexTile tile in hexList)
+        {
+            tile.ComputeGlobalValue(goal);
+        }
+    }
+
     void SetGridNeighbours()
     {
         foreach(HexTile tile in hexList)
@@ -158,6 +166,88 @@ public class HexGrid : MonoBehaviour
             }
         }
         return reached;
+    }
+
+    public List<HexTile>GetThreatenedTiles(HexTile startinghex, int range)
+    {
+        foreach(HexTile t in hexList )
+        {
+            if(t.globalValue <= range && CheckLineOfSight(HexLineDraw(startinghex, t)))
+            {
+                highlightedTiles.Add(t);
+                t.ActivateHighlight(HighlightColor.ATTACK);
+            }
+        }
+        return highlightedTiles;
+    }
+
+    bool CheckLineOfSight(List<HexTile> line)
+    {
+        foreach (HexTile h in line)
+        {
+            if (h.type == HexType.FOREST)
+            {
+                return false;
+               
+            }
+        }
+        return true;
+    }
+
+    int DistancebetweenHexs(HexTile a, HexTile b)
+    {
+        return (Mathf.Abs(a.coordinates.x - b.coordinates.x) +
+                  Mathf.Abs(a.coordinates.y - b.coordinates.y) +
+                  Mathf.Abs(a.coordinates.z - b.coordinates.z)) / 2;
+    }
+    Vector3 HexLerp(HexTile a, HexTile b, float t)
+    {
+        Vector3 temp = new Vector3(Mathf.Lerp(a.coordinates.x, b.coordinates.x, t),
+                                   Mathf.Lerp(a.coordinates.y, b.coordinates.y, t),
+                                   Mathf.Lerp(a.coordinates.z, b.coordinates.z, t));
+
+        return temp;
+    }
+
+    HexTile HexRound(Vector3 cube)
+    {
+        float rx = Mathf.Round(cube.x);
+        float ry = Mathf.Round(cube.y);
+        float rz = Mathf.Round(cube.z);
+
+        float x_diff = Mathf.Abs(rx - cube.x);
+        float y_diff = Mathf.Abs(ry - cube.y);
+        float z_diff = Mathf.Abs(rz - cube.z);
+
+        if (x_diff > y_diff && x_diff > z_diff)
+            rx = -ry - rz;
+        else if (y_diff > z_diff)
+            ry = -rx - rz;
+        else
+            rz = -rx - ry;
+
+        return GetHex(new Vector3Int((int)rx, (int)ry, (int)rz));
+    }
+
+    List<HexTile> HexLineDraw(HexTile a, HexTile b)
+    {
+        int distance = DistancebetweenHexs(a, b);
+        List<HexTile> results = new List<HexTile>();
+            float num;
+        if (distance > 1)
+            num = distance;
+        else
+            num = 1;
+
+       float step = 1.0f / num;
+
+        for (int i = 0; i < distance; i++)
+        {
+            //std::cout << thing->getCubeCoordinate().x << " " << thing->getCubeCoordinate().y << " " << thing->getCubeCoordinate().z << std::endl;
+            results.Add(HexRound(HexLerp(a, b, step * i)));
+        }
+
+        return results;
     }
 
     public void ResetTiles()

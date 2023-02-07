@@ -18,6 +18,7 @@ MonoBehaviour:
   growthConcentration: 0.5
   growthResolve: 1.5
   initiativeBonus: 0
-  movementRange: 3
+  movementRange: 5
   dashRange: 2
+  attackRange: 5
   sprite: {fileID: 21300000, guid: c98aee9e683dad9429eb2b2368dbcfc6, type: 3}

@@ -37,6 +37,16 @@ public class UIManager : MonoBehaviour
         actionBar.transform.GetChild(button).GetComponent<Button>().interactable = false;
     }
 
+    public void ActionHoverAttack(bool tf)
+    {
+        BattleManager.Instance.ShowThreatendHexs(tf);
+    }
+
+    public void ActionAttack()
+    {
+        BattleManager.Instance.AttackUnit();
+    }
+
     public void ResetActions()
     {
         actionBar.transform.GetChild(0).GetComponent<Button>().interactable = true;

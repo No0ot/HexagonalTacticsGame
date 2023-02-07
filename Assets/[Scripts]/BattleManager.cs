@@ -88,6 +88,7 @@ public class BattleManager : MonoBehaviour
                         currentTurnUnit.PlaceUnit(hex);
                         UIManager.Instance.DisableAction(0);
                         grid.ResetTiles();
+                        grid.RecomputeGlobalValues(currentTurnUnit.tile.coordinates);
                         break;
                     }
                 }
@@ -161,6 +162,7 @@ public class BattleManager : MonoBehaviour
 
         UIManager.Instance.actionBar.SetActive(true);
         UIManager.Instance.ResetActions();
+        grid.RecomputeGlobalValues(currentTurnUnit.tile.coordinates);
         //while(turnOrder.Count > 0)
         //{
         //    Unit temp = turnOrder.Dequeue();
@@ -173,6 +175,7 @@ public class BattleManager : MonoBehaviour
         switch(phase)
         {
             case TurnPhase.MOVE:
+                // just call function in grid to do all this instead
                 grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.movementRange);
                 grid.ResetHexPathfindingValues();
                 List<HexTile> temp = new List<HexTile>();
@@ -190,6 +193,8 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
             case TurnPhase.ATTACK:
+                grid.GetThreatenedTiles(currentTurnUnit.tile, currentTurnUnit.job.attackRange);
+
                 break;
             case TurnPhase.SKILL:
                 break;
@@ -214,15 +219,22 @@ public class BattleManager : MonoBehaviour
 
     public void FaceUnit()
     {
+        grid.ResetTiles();
         phase = TurnPhase.FACE;
         HighlightTiles();
     }
 
     public void MoveUnit()
     {
+        grid.ResetTiles();
         phase = TurnPhase.MOVE;
         HighlightTiles();
     }
+
+    public void AttackUnit()
+    {
+
+    }    
 
     public void EndTurn()
     {
@@ -238,5 +250,16 @@ public class BattleManager : MonoBehaviour
             TurnStart();
         else
             RoundStart();
+    }
+
+    public void ShowThreatendHexs(bool show)
+    {
+        if (!show)
+            grid.ResetTiles();
+        else
+        {
+            phase = TurnPhase.ATTACK;
+            HighlightTiles();
+        }
     }
 }
