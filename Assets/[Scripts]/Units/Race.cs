@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewRace", menuName = "Unit/Race")]
 public class Race : ScriptableObject
 {
+    public NameList nameList;
+
     [Header("Information")]
     public string raceName;
 
@@ -25,5 +27,16 @@ public class Race : ScriptableObject
     public int bonusMovement;
     public int bonusDash;
 
+
+    public string GetRandomName()
+    {
+        string newName = "";
+
+        int randName = Random.Range(0, nameList.names.Length);
+        newName = nameList.names[randName];
+
+
+        return newName;
+    }
     //passive abilities
 }

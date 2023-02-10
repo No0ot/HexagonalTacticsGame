@@ -38,20 +38,20 @@ public class MouseController : MonoBehaviour
 
         if (Input.GetKey("w"))
         {
-            posY = Mathf.Clamp(camera.transform.position.y + 0.05f, -3.0f, 3.0f);
+            posY = Mathf.Clamp(camera.transform.position.y + 0.05f, -zoomMin, zoomMin);
         }
         else if (Input.GetKey("s"))
         {
-            posY = Mathf.Clamp(camera.transform.position.y - 0.05f, -3.0f, 3.0f);
+            posY = Mathf.Clamp(camera.transform.position.y - 0.05f, -zoomMin, zoomMin);
         }
 
         if (Input.GetKey("a"))
         {
-            posX = Mathf.Clamp(camera.transform.position.x - 0.05f, -3.0f, 3.0f);
+            posX = Mathf.Clamp(camera.transform.position.x - 0.05f, -zoomMin, zoomMin);
         }
         if (Input.GetKey("d"))
         {
-            posX = Mathf.Clamp(camera.transform.position.x + 0.05f, -3.0f, 3.0f);
+            posX = Mathf.Clamp(camera.transform.position.x + 0.05f, -zoomMin, zoomMin);
         }
 
         camera.transform.position = new Vector3(posX, posY, -10f);

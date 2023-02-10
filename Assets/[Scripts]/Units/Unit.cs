@@ -33,7 +33,7 @@ public class Unit : MonoBehaviour
     public SpriteRenderer raceSprite;
     public SpriteRenderer jobSprite;
 
-    int level;
+    public int level;
     public HexTile tile;
     public HexTile attackDirection;
 
@@ -57,13 +57,18 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         raceSprite = GetComponent<SpriteRenderer>();
-        SetupStats();
+    }
+
+    public void InitializeUnit()
+    {
         raceSprite.color = playerColor;
         jobSprite.sprite = job.sprite;
         jobSprite.color = playerColor;
 
         int rand = Random.Range(1, 7);
         RotateTowards((HexDirection)rand);
+
+        SetupStats();
     }
 
     void SetupStats()
@@ -73,7 +78,7 @@ public class Unit : MonoBehaviour
         concentration = race.baseConcentration + (race.growthConcentration * level) + (job.growthConcentration * level);
         resolve = race.baseResolve + (race.growthResolve * level) + (job.growthStrength * level);
 
-        currentHealth = maxHealth = Mathf.Round(strength * 9.6f);
+        currentHealth = maxHealth = Mathf.Round(strength * 9.6f) + 50f;
 
         movementRange = job.movementRange + race.bonusMovement;
         dashRange = job.dashRange + race.bonusDash;
@@ -95,8 +100,8 @@ public class Unit : MonoBehaviour
                 attackModifier = resolve;
                 break;
         }
-        minDamage = job.baseMinDamage + attackModifier;
-        maxDamage = job.baseMaxDamage + attackModifier;
+        minDamage = attackModifier;
+        maxDamage = job.damageVariance + attackModifier;
 
     }
 
@@ -162,34 +167,33 @@ public class Unit : MonoBehaviour
 
     public void Attack(Unit other, HexTile direction)
     {
-        Debug.Log("Attack");
         Vector3 attackDirection = direction.transform.position - other.tile.transform.position;
         Debug.DrawLine(other.transform.position, other.transform.position + other.transform.up * 10f, Color.red, 10f);
         Debug.DrawLine(other.tile.transform.position, other.tile.transform.position + attackDirection * 10f, Color.magenta, 10f);
         float angle = Vector3.Angle(other.transform.up, attackDirection);
-        int missChance = 40 + (int)other.finesse;
+        int missChance = 30 + (int)other.finesse / 2;
         if(angle > 170)
         {
             missChance -= 30;
-            Debug.Log("Attack from Behind");
+            Debug.Log(name + " Attacked " + other.name + " from Behind");
         }
         else if(angle > 120)
         {
             missChance -= 15;
-            Debug.Log("Attack from Slightly Behind");
+            Debug.Log(name + " Attacked " + other.name + " from Slightly Behind");
         }
         else if(angle > 50)
         {
             missChance += 10;
-            Debug.Log("Attack from Slightly Front");
+            Debug.Log(name + " Attacked " + other.name + " from Slightly Front");
         }
         else
         {
             missChance += 20;
-            Debug.Log("Attack from Front");
+            Debug.Log(name + " Attacked " + other.name + " from Front");
         }
-        Debug.Log(angle);
 
+        
         if (CheckIfHit(missChance))
         {
             float damage = Random.Range(minDamage, maxDamage);
@@ -197,11 +201,12 @@ public class Unit : MonoBehaviour
             threat += damage;
             other.TakeDamage(damage);
             CombatTextGenerator.Instance.NewCombatText(other, damage);
+            Debug.Log("And hit! Dealing " + damage);
         }
         else
         {
             CombatTextGenerator.Instance.NewCombatText(other, 0f);
-            Debug.Log("Missed");
+            Debug.Log(" And missed!");
         }
 
         other.Deactivate();
@@ -210,7 +215,9 @@ public class Unit : MonoBehaviour
 
     public bool CheckIfHit(int missChance)
     {
-        int attackroll = Random.Range(1, 101) + (int)concentration;
+        int attackroll = Random.Range(1, 101 + (int)concentration / 2);
+        Debug.Log(name + " has a " + (100 + (int)concentration / 2 - missChance) + "% chance to hit)");
+        Debug.Log("Rolled a " + attackroll + " against " + missChance);
         if (attackroll > missChance)
             return true;
         else

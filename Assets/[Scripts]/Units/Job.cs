@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewRace", menuName = "Unit/Job")]
+[CreateAssetMenu(fileName = "NewJob", menuName = "Unit/Job")]
 public class Job : ScriptableObject
 {
     [Header("Information")]
@@ -21,8 +21,7 @@ public class Job : ScriptableObject
     public int dashRange;
     public int attackRange;
     public float baseThreat;
-    public float baseMinDamage;
-    public float baseMaxDamage;
+    public float damageVariance;
 
     public Sprite sprite;
 

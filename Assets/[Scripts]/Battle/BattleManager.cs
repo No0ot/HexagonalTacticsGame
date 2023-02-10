@@ -18,18 +18,20 @@ public class BattleManager : MonoBehaviour
     public delegate void SelectHexDelegate(HexTile hex);
     public SelectHexDelegate selectHex;
 
-    public List<Unit> unitList = new List<Unit>();
+    public List<Unit>[] unitList = new List<Unit>[2] { new List<Unit>(), new List<Unit>()};
     Queue<Unit> turnOrder = new Queue<Unit>();
     HexGrid grid;
 
     public Unit currentTurnUnit = null;
     public HexTile selectedTile { get; set; }
-    public Unit selectedUnit{ get; set; }
+    public Unit selectedUnit { get; set; }
     public Unit attackedUnit = null;
 
     TurnPhase phase;
     bool canMove = true;
-
+    UnitGenerator unitGenerator;
+    public List<Player> players;
+    public Color[] playerColors;
 
     private void Awake()
     {
@@ -40,19 +42,64 @@ public class BattleManager : MonoBehaviour
 
         selectHex += SelectHex;
         grid = FindObjectOfType<HexGrid>();
+        unitGenerator = GetComponent<UnitGenerator>();
+
+        players = GameManager.Instance.players;
     }
     // Start is called before the first frame update
     void Start()
     {
         grid.BuildGrid();
-        foreach(Unit unit in unitList)
+
+        for(int i = 0; i < players.Count; i++)
         {
-            int temp = Random.Range(0, grid.hexList.Count);
-            while (grid.hexList[temp].occupant || grid.hexList[temp].type == HexType.FOREST)
+            for(int j = 0; j < 4; j++)
             {
-                temp = Random.Range(0, grid.hexList.Count);
+                Unit newUnit = unitGenerator.CreateUnit(players[i], 10);
+                unitList[i].Add(newUnit);
             }
-            unit.PlaceUnit(grid.hexList[temp]);
+        }
+
+        foreach(Unit unit in unitList[0])
+        {
+            HexTile spawnTile = grid.GetSpawnTile(false);
+            List<HexTile> spawnTiles = new List<HexTile>();
+            if (spawnTile.type != HexType.FOREST && !spawnTile.occupant)
+                spawnTiles.Add(spawnTile);
+            foreach(HexTile tile in spawnTile.neighbours)
+            {
+                if (tile)
+                {
+                    if(tile.type != HexType.FOREST && !tile.occupant)
+                        spawnTiles.Add(tile);
+                }
+            }
+
+            if(spawnTiles.Count > 0)
+            {
+                unit.PlaceUnit(spawnTiles[0]);
+            }
+        }
+
+        foreach (Unit unit in unitList[1])
+        {
+            HexTile spawnTile = grid.GetSpawnTile(true);
+            List<HexTile> spawnTiles = new List<HexTile>();
+            if (spawnTile.type != HexType.FOREST && !spawnTile.occupant)
+                spawnTiles.Add(spawnTile);
+            foreach (HexTile tile in spawnTile.neighbours)
+            {
+                if (tile)
+                {
+                    if (tile.type != HexType.FOREST && !tile.occupant)
+                        spawnTiles.Add(tile);
+                }
+            }
+
+            if (spawnTiles.Count > 0)
+            {
+                unit.PlaceUnit(spawnTiles[0]);
+            }
         }
 
         RoundStart();
@@ -134,8 +181,12 @@ public class BattleManager : MonoBehaviour
         RollInitiative();
 
         InitComparison comp = new InitComparison();
-        unitList.Sort(comp);
-        foreach(Unit unit in unitList)
+        List<Unit> sortList = new List<Unit>();
+        sortList.AddRange(unitList[0]);
+        sortList.AddRange(unitList[1]);
+
+        sortList.Sort(comp);
+        foreach(Unit unit in sortList)
         {
             turnOrder.Enqueue(unit);
         }
@@ -149,9 +200,12 @@ public class BattleManager : MonoBehaviour
 
     void RollInitiative()
     {
-        foreach(Unit unit in unitList)
+        foreach (List<Unit> list in unitList)
         {
-            unit.RollInitiative();
+            foreach (Unit unit in list)
+            {
+                unit.RollInitiative();
+            }
         }
     }
 
@@ -214,6 +268,7 @@ public class BattleManager : MonoBehaviour
                 {
                     attackedUnit = threatenedUnits[0];
                     attackedUnit.Threatened();
+                    UIManager.Instance.selectedUnitProfile.UpdateProfile(attackedUnit);
                 }
                 else
                 {
@@ -283,6 +338,7 @@ public class BattleManager : MonoBehaviour
 
         UIManager.Instance.DisableAction(1);
         ShowThreatendHexs(false);
+        UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
     }    
 
     public void EndTurn()

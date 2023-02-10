@@ -36,6 +36,7 @@ public class ProfileViewer : MonoBehaviour
         job.text = unitReference.job.name;
         race.text = unitReference.race.name;
         image.sprite = unitReference.job.sprite;
+        race.color = unitReference.race.color;
 
         UpdateReferenceHealth();
     }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81165369057ae9641b9e70f32f22f29f, type: 3}
   m_Name: Gloryborn
   m_EditorClassIdentifier: 
+  nameList: {fileID: 11400000, guid: 61272ae211de141408638cc054634cd6, type: 2}
   raceName: Gloryborn
   baseStrength: 10
   baseFinesse: 15
@@ -22,3 +23,5 @@ MonoBehaviour:
   growthConcentration: 1.25
   growthResolve: 1.5
   color: {r: 1, g: 0.93442965, b: 0, a: 1}
+  bonusMovement: 0
+  bonusDash: 0

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81165369057ae9641b9e70f32f22f29f, type: 3}
   m_Name: Orillian
   m_EditorClassIdentifier: 
+  nameList: {fileID: 11400000, guid: ad275092c882d0540bac8a5aad982fe4, type: 2}
   raceName: Orillian
   baseStrength: 15
   baseFinesse: 25
@@ -22,3 +23,5 @@ MonoBehaviour:
   growthConcentration: 0.5
   growthResolve: 0.5
   color: {r: 0.3673796, g: 0.8113208, b: 0, a: 1}
+  bonusMovement: 0
+  bonusDash: 0

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81165369057ae9641b9e70f32f22f29f, type: 3}
   m_Name: Golm
   m_EditorClassIdentifier: 
+  nameList: {fileID: 11400000, guid: 830ba486e98e89549afeda85d23f8d35, type: 2}
   raceName: Golm
   baseStrength: 30
   baseFinesse: 10
@@ -22,3 +23,5 @@ MonoBehaviour:
   growthConcentration: 1
   growthResolve: 0.5
   color: {r: 1, g: 0, b: 0.25303364, a: 1}
+  bonusMovement: 0
+  bonusDash: 0

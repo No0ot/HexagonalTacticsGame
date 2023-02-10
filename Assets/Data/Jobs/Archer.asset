@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da54a2133747696468c9b763b3ebbd07, type: 3}
-  m_Name: Knight
+  m_Name: Archer
   m_EditorClassIdentifier: 
-  jobName: Knight
-  mainAttribute: 0
-  growthStrength: 4
-  growthFinesse: 2
-  growthConcentration: 1
-  growthResolve: 3
-  initiativeBonus: 0
-  movementRange: 5
-  dashRange: 2
-  attackRange: 1
-  baseThreat: 100
-  damageVariance: 26
-  sprite: {fileID: 21300000, guid: c98aee9e683dad9429eb2b2368dbcfc6, type: 3}
+  jobName: Archer
+  mainAttribute: 1
+  growthStrength: 1.5
+  growthFinesse: 5
+  growthConcentration: 2.5
+  growthResolve: 1.25
+  initiativeBonus: 1
+  movementRange: 3
+  dashRange: 1
+  attackRange: 4
+  baseThreat: 80
+  damageVariance: 12
+  sprite: {fileID: 21300000, guid: 067b63a3ffcc3c94b9bea15693a7bb28, type: 3}

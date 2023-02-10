@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81165369057ae9641b9e70f32f22f29f, type: 3}
   m_Name: Human
   m_EditorClassIdentifier: 
+  nameList: {fileID: 11400000, guid: eadcdd96fdf5ab443ab7c689c5ca6623, type: 2}
   raceName: Human
   baseStrength: 20
   baseFinesse: 10
@@ -22,3 +23,5 @@ MonoBehaviour:
   growthConcentration: 1.5
   growthResolve: 0.75
   color: {r: 0, g: 0.288177, b: 1, a: 1}
+  bonusMovement: 0
+  bonusDash: 0
