@@ -14,11 +14,20 @@ public class InitComparison : IComparer<Unit>
     }
 }
 
+public class ThreatComparison : IComparer<Unit>
+{
+    public int Compare(Unit x, Unit y)
+    {
+        return y.threat.CompareTo(x.threat);
+    }
+}
+
 public class Unit : MonoBehaviour
 {
     public string name;
     public Race race;
     public Job job;
+    public int playerNum;
     public Color playerColor;
 
     public SpriteRenderer raceSprite;
@@ -26,19 +35,24 @@ public class Unit : MonoBehaviour
 
     int level;
     public HexTile tile;
+    public HexTile attackDirection;
 
     [Header("Stats")]
     public float strength;
     public float finesse;
     public float concentration;
     public float resolve;
-
-    [Header("Battle Stats")]
-    public int initiative;
     public float maxHealth;
     public float currentHealth;
     public int movementRange;
     public int dashRange;
+    public float minDamage;
+    public float maxDamage;
+
+    [Header("Battle Stats")]
+    public int initiative;
+    public float threat;
+    HexDirection facing;
 
     private void Awake()
     {
@@ -49,14 +63,7 @@ public class Unit : MonoBehaviour
         jobSprite.color = playerColor;
 
         int rand = Random.Range(1, 7);
-        Vector3 zRotation = new Vector3(0f, 0f,30f + rand * 60f);
-        transform.rotation = Quaternion.Euler(zRotation);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        RotateTowards((HexDirection)rand);
     }
 
     void SetupStats()
@@ -70,6 +77,27 @@ public class Unit : MonoBehaviour
 
         movementRange = job.movementRange + race.bonusMovement;
         dashRange = job.dashRange + race.bonusDash;
+        threat += job.baseThreat;
+
+        float attackModifier = 0;
+        switch(job.mainAttribute)
+        {
+            case UnitAttributes.STRENGTH:
+                attackModifier = strength;
+                break;
+            case UnitAttributes.FINESSE:
+                attackModifier = finesse;
+                break;
+            case UnitAttributes.CONCENTRATION:
+                attackModifier = concentration;
+                break;
+            case UnitAttributes.RESOLVE:
+                attackModifier = resolve;
+                break;
+        }
+        minDamage = job.baseMinDamage + attackModifier;
+        maxDamage = job.baseMaxDamage + attackModifier;
+
     }
 
     public void PlaceUnit(HexTile hex)
@@ -89,8 +117,13 @@ public class Unit : MonoBehaviour
 
     public void Activate()
     {
-        Debug.Log("activatijng");
+        //Debug.Log("activatijng");
         raceSprite.color = Color.yellow;
+    }
+
+    public void Threatened()
+    {
+        raceSprite.color = Color.red;
     }
 
     public void Deactivate()
@@ -122,7 +155,80 @@ public class Unit : MonoBehaviour
                 angle = 330f;
                 break;
         }
+        facing = direction;
         Vector3 zRotation = new Vector3(0f, 0f, angle);
         transform.rotation = Quaternion.Euler(zRotation);
+    }
+
+    public void Attack(Unit other, HexTile direction)
+    {
+        Debug.Log("Attack");
+        Vector3 attackDirection = direction.transform.position - other.tile.transform.position;
+        Debug.DrawLine(other.transform.position, other.transform.position + other.transform.up * 10f, Color.red, 10f);
+        Debug.DrawLine(other.tile.transform.position, other.tile.transform.position + attackDirection * 10f, Color.magenta, 10f);
+        float angle = Vector3.Angle(other.transform.up, attackDirection);
+        int missChance = 40 + (int)other.finesse;
+        if(angle > 170)
+        {
+            missChance -= 30;
+            Debug.Log("Attack from Behind");
+        }
+        else if(angle > 120)
+        {
+            missChance -= 15;
+            Debug.Log("Attack from Slightly Behind");
+        }
+        else if(angle > 50)
+        {
+            missChance += 10;
+            Debug.Log("Attack from Slightly Front");
+        }
+        else
+        {
+            missChance += 20;
+            Debug.Log("Attack from Front");
+        }
+        Debug.Log(angle);
+
+        if (CheckIfHit(missChance))
+        {
+            float damage = Random.Range(minDamage, maxDamage);
+            damage = Mathf.RoundToInt(damage);
+            threat += damage;
+            other.TakeDamage(damage);
+            CombatTextGenerator.Instance.NewCombatText(other, damage);
+        }
+        else
+        {
+            CombatTextGenerator.Instance.NewCombatText(other, 0f);
+            Debug.Log("Missed");
+        }
+
+        other.Deactivate();
+        other.attackDirection = null;
+    }
+
+    public bool CheckIfHit(int missChance)
+    {
+        int attackroll = Random.Range(1, 101) + (int)concentration;
+        if (attackroll > missChance)
+            return true;
+        else
+            return false;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        if(currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        BattleManager.Instance.KillUnit(this);
     }
 }

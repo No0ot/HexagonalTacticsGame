@@ -39,7 +39,8 @@ public class UIManager : MonoBehaviour
 
     public void ActionHoverAttack(bool tf)
     {
-        BattleManager.Instance.ShowThreatendHexs(tf);
+        if(actionBar.transform.GetChild(1).GetComponent<Button>().interactable)
+            BattleManager.Instance.ShowThreatendHexs(tf);
     }
 
     public void ActionAttack()

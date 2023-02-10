@@ -8,6 +8,8 @@ public class MouseController : MonoBehaviour
     public Camera camera;
     Vector3 point;
     GameObject mouseOverHex;
+    public float zoomMax = 1.0f;
+    public float zoomMin = 3.5f;
 
     private void Awake()
     {
@@ -28,7 +30,7 @@ public class MouseController : MonoBehaviour
             mouseOverHex = null;
         }
 
-        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + -Input.GetAxis("Mouse ScrollWheel"), 1.0f, 3.5f);
+        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + -Input.GetAxis("Mouse ScrollWheel"), zoomMax, zoomMin);
 
         
         float posY = camera.transform.position.y;

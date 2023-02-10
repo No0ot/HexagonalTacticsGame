@@ -229,7 +229,7 @@ public class HexGrid : MonoBehaviour
         return GetHex(new Vector3Int((int)rx, (int)ry, (int)rz));
     }
 
-    List<HexTile> HexLineDraw(HexTile a, HexTile b)
+    public List<HexTile> HexLineDraw(HexTile a, HexTile b)
     {
         int distance = DistancebetweenHexs(a, b);
         List<HexTile> results = new List<HexTile>();

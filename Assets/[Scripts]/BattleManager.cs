@@ -25,6 +25,7 @@ public class BattleManager : MonoBehaviour
     public Unit currentTurnUnit = null;
     public HexTile selectedTile { get; set; }
     public Unit selectedUnit{ get; set; }
+    public Unit attackedUnit = null;
 
     TurnPhase phase;
     bool canMove = true;
@@ -87,6 +88,10 @@ public class BattleManager : MonoBehaviour
                     {
                         currentTurnUnit.PlaceUnit(hex);
                         UIManager.Instance.DisableAction(0);
+                        if(tile.currentHighlight == HighlightColor.MOVE)
+                        {
+                            UIManager.Instance.DisableAction(1);
+                        }
                         grid.ResetTiles();
                         grid.RecomputeGlobalValues(currentTurnUnit.tile.coordinates);
                         break;
@@ -175,7 +180,7 @@ public class BattleManager : MonoBehaviour
         switch(phase)
         {
             case TurnPhase.MOVE:
-                // just call function in grid to do all this instead
+                // just call a function in grid to do all this instead, like in attack phase
                 grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.movementRange);
                 grid.ResetHexPathfindingValues();
                 List<HexTile> temp = new List<HexTile>();
@@ -194,7 +199,44 @@ public class BattleManager : MonoBehaviour
                 break;
             case TurnPhase.ATTACK:
                 grid.GetThreatenedTiles(currentTurnUnit.tile, currentTurnUnit.job.attackRange);
+                List<Unit> threatenedUnits = new List<Unit>();
+                foreach (HexTile tile in grid.highlightedTiles)
+                {
+                    if (!tile.occupant || tile.occupant.playerNum == currentTurnUnit.playerNum)
+                        continue;
 
+                    threatenedUnits.Add(tile.occupant);
+                }
+
+                threatenedUnits.Sort(new ThreatComparison());
+
+                if (threatenedUnits.Count > 0)
+                {
+                    attackedUnit = threatenedUnits[0];
+                    attackedUnit.Threatened();
+                }
+                else
+                {
+                    Debug.Log("No Target");
+                    break;
+                }
+
+                List<HexTile> direction = grid.HexLineDraw(currentTurnUnit.tile, attackedUnit.tile);
+
+                foreach (HexTile lineTile in direction)
+                {
+                    foreach (HexTile neighbour in attackedUnit.tile.neighbours)
+                    {
+                        if (lineTile == neighbour)
+                        {
+                            attackedUnit.attackDirection = neighbour;
+                            neighbour.ActivateHighlight(HighlightColor.SKILL);
+                            break;
+                        }
+                    }
+                    if (attackedUnit.attackDirection != null)
+                        break;
+                }
                 break;
             case TurnPhase.SKILL:
                 break;
@@ -233,7 +275,14 @@ public class BattleManager : MonoBehaviour
 
     public void AttackUnit()
     {
+        if (!attackedUnit)
+            return;
 
+        
+        currentTurnUnit.Attack(attackedUnit, attackedUnit.attackDirection);
+
+        UIManager.Instance.DisableAction(1);
+        ShowThreatendHexs(false);
     }    
 
     public void EndTurn()
@@ -255,11 +304,24 @@ public class BattleManager : MonoBehaviour
     public void ShowThreatendHexs(bool show)
     {
         if (!show)
+        {
             grid.ResetTiles();
+            if (attackedUnit)
+            {
+                attackedUnit.Deactivate();
+                attackedUnit.attackDirection = null;
+                attackedUnit = null;
+            }
+        }
         else
         {
             phase = TurnPhase.ATTACK;
             HighlightTiles();
         }
+    }
+
+    public void KillUnit(Unit deadUnit)
+    {
+
     }
 }

@@ -49,6 +49,7 @@ public class HexTile : MonoBehaviour
 	public GameObject selector;
 	public SpriteRenderer highlight;
 	public Color[] highlightColors;
+	public HighlightColor currentHighlight;
 	Color selectorColor;
 
 	//Layout and Orientation stuff
@@ -105,10 +106,15 @@ public class HexTile : MonoBehaviour
     private void OnMouseEnter()
     {
 		selector.SetActive(true);
+		if(occupant)
+        {
+			UIManager.Instance.selectedUnitProfile.UpdateProfile(occupant);
+        }
 	}
     private void OnMouseExit()
     {
 		selector.SetActive(false);
+		UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
 	}
 
     private void OnMouseDown()
@@ -124,6 +130,7 @@ public class HexTile : MonoBehaviour
 
 	public void ActivateHighlight(HighlightColor color)
     {
+		currentHighlight = color;
 		highlight.gameObject.SetActive(true);
 		highlight.color = highlightColors[(int)color];
     }

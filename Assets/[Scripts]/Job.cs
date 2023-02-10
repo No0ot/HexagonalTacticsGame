@@ -7,7 +7,7 @@ public class Job : ScriptableObject
 {
     [Header("Information")]
     public string jobName;
-    UnitAttributes mainAttribute;
+    public UnitAttributes mainAttribute;
 
     [Header("Stat Growths")]
     public float growthStrength;
@@ -20,6 +20,9 @@ public class Job : ScriptableObject
     public int movementRange;
     public int dashRange;
     public int attackRange;
+    public float baseThreat;
+    public float baseMinDamage;
+    public float baseMaxDamage;
 
     public Sprite sprite;
 
