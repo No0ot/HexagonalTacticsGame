@@ -19,7 +19,7 @@ MonoBehaviour:
   growthConcentration: 1
   growthResolve: 3
   initiativeBonus: 0
-  movementRange: 5
+  movementRange: 6
   dashRange: 2
   attackRange: 1
   baseThreat: 100

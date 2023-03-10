@@ -24,4 +24,6 @@ MonoBehaviour:
   attackRange: 4
   baseThreat: 80
   damageVariance: 12
+  skills:
+  - {fileID: 11400000, guid: a197501763d964a4e9f3af0a8cd9b596, type: 2}
   sprite: {fileID: 21300000, guid: 067b63a3ffcc3c94b9bea15693a7bb28, type: 3}

@@ -173,7 +173,7 @@ public class HexGrid : MonoBehaviour
             if(t.globalValue <= range && CheckLineOfSight(HexLineDraw(startinghex, t)))
             {
                 highlightedTiles.Add(t);
-                t.ActivateHighlight(HighlightColor.ATTACK);
+                t.ActivateHighlight(HighlightColor.THREATEN);
             }
         }
         return highlightedTiles;

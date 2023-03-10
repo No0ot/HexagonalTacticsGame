@@ -88,13 +88,19 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 0}
   - {r: 0, g: 0.203542, b: 1, a: 0.5019608}
   - {r: 0, g: 0.92019224, b: 1, a: 0.5019608}
-  - {r: 0.9433962, g: 0, b: 0, a: 0.5019608}
-  - {r: 0.013616921, g: 0.9622642, b: 0.08347496, a: 0.5019608}
+  - {r: 1, g: 0.43237165, b: 0, a: 0.59607846}
+  - {r: 0.6132076, g: 0, b: 0.09429437, a: 0.5019608}
+  - {r: 0.65686184, g: 0.3066038, b: 1, a: 0.5019608}
   - {r: 0.9427508, g: 1, b: 0, a: 0.5019608}
+  currentHighlight: 0
   occupant: {fileID: 0}
   type: 0
   sprites: []
   neighbours: []
+  pathfindingCost: 0
+  localValue: 100
+  globalValue: 0
+  pathfindingVisited: 0
 --- !u!60 &6103529640182036219
 PolygonCollider2D:
   m_ObjectHideFlags: 0

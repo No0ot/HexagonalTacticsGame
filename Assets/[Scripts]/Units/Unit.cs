@@ -53,6 +53,8 @@ public class Unit : MonoBehaviour
     public int initiative;
     public float threat;
     HexDirection facing;
+    public List<Skill> skills;
+    public Skill activeSkill;
 
     private void Awake()
     {
@@ -67,7 +69,10 @@ public class Unit : MonoBehaviour
 
         int rand = Random.Range(1, 7);
         RotateTowards((HexDirection)rand);
-
+        foreach(Skill s in job.skills)
+        {
+            skills.Add(s);
+        }
         SetupStats();
     }
 
@@ -200,12 +205,12 @@ public class Unit : MonoBehaviour
             damage = Mathf.RoundToInt(damage);
             threat += damage;
             other.TakeDamage(damage);
-            CombatTextGenerator.Instance.NewCombatText(other, damage);
+            //CombatTextGenerator.Instance.NewCombatText(other, damage);
             Debug.Log("And hit! Dealing " + damage);
         }
         else
         {
-            CombatTextGenerator.Instance.NewCombatText(other, 0f);
+            //CombatTextGenerator.Instance.NewCombatText(other, 0f);
             Debug.Log(" And missed!");
         }
 
@@ -226,11 +231,20 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        CombatTextGenerator.Instance.NewCombatText(this, damage);
         currentHealth -= damage;
         if(currentHealth <= 0)
         {
             currentHealth = 0;
             Die();
+        }
+    }
+
+    public void UseAbility(Unit target)
+    {
+        if(activeSkill)
+        {
+           
         }
     }
 

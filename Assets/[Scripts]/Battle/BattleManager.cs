@@ -44,11 +44,12 @@ public class BattleManager : MonoBehaviour
         grid = FindObjectOfType<HexGrid>();
         unitGenerator = GetComponent<UnitGenerator>();
 
-        players = GameManager.Instance.players;
+        
     }
     // Start is called before the first frame update
     void Start()
     {
+        players = GameManager.Instance.players;
         grid.BuildGrid();
 
         for(int i = 0; i < players.Count; i++)
@@ -148,7 +149,49 @@ public class BattleManager : MonoBehaviour
             case TurnPhase.ATTACK:
                 break;
             case TurnPhase.SKILL:
-                break;
+                foreach (HexTile tile in grid.highlightedTiles)
+                {
+                    if (hex == tile)
+                    {
+                        List<HexTile> open = new List<HexTile>();
+                        open.Add(hex);
+                        for(int i = 0; i < currentTurnUnit.activeSkill.data.radius; i++)
+                        {
+                            for(int j = 0; j < open.Count; j++)
+                            {
+                                List<HexTile> open2 = new List<HexTile>();
+                                foreach(HexTile n in open[j].neighbours)
+                                {
+                                    if(!open.Contains(n))
+                                        open2.Add(n);
+                                }
+                                open.AddRange(open2);
+                            }
+                        }
+                        List<Unit> units = new List<Unit>();
+                        foreach(HexTile t in open)
+                        {
+                            if (t.occupant)
+                                units.Add(t.occupant);
+                        }
+
+                        currentTurnUnit.activeSkill.UseSkill(units);
+                        //if(currentTurnUnit.activeSkill.type == SkillType.AOE)
+                        //{
+                        //
+                        //}
+                        //else
+                        //{
+                        //    Debug.Log("using skill");
+                        //    if (hex.occupant)
+                        //    {
+                        //        currentTurnUnit.UseAbility(hex.occupant);
+                        //    }
+                        //}
+                        break;
+                    }
+                }
+                        break;
             case TurnPhase.FACE:
 
                 for(int i = 0; i < currentTurnUnit.tile.neighbours.Count; i++)
@@ -275,7 +318,7 @@ public class BattleManager : MonoBehaviour
                     Debug.Log("No Target");
                     break;
                 }
-
+                attackedUnit.tile.ActivateHighlight(HighlightColor.ATTACK);
                 List<HexTile> direction = grid.HexLineDraw(currentTurnUnit.tile, attackedUnit.tile);
 
                 foreach (HexTile lineTile in direction)
@@ -294,6 +337,12 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
             case TurnPhase.SKILL:
+                grid.highlightedTiles = grid.GetThreatenedTiles(currentTurnUnit.tile, currentTurnUnit.activeSkill.range);
+                foreach (HexTile tile in grid.highlightedTiles)
+                {
+                    if (tile)
+                        tile.ActivateHighlight(HighlightColor.SKILL);
+                }
                 break;
             case TurnPhase.FACE:
                 List<HexTile> neighbours = new List<HexTile>();
@@ -341,6 +390,13 @@ public class BattleManager : MonoBehaviour
         UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
     }    
 
+    public void UseSkill(int skillnum)
+    {
+        currentTurnUnit.activeSkill = currentTurnUnit.skills[skillnum];
+        phase = TurnPhase.SKILL;
+        HighlightTiles();
+    }
+
     public void EndTurn()
     {
         foreach (HexTile tile in grid.highlightedTiles)
@@ -379,5 +435,13 @@ public class BattleManager : MonoBehaviour
     public void KillUnit(Unit deadUnit)
     {
 
+    }
+
+    public List<Unit> GetSkillTargets(Skill usedSkill)
+    {
+        List<Unit> targets = new List<Unit>();
+
+
+        return targets;
     }
 }

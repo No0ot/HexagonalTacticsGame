@@ -463,6 +463,10 @@ PrefabInstance:
       propertyPath: sprites.Array.data[4]
       value: 
       objectReference: {fileID: 8766758567265494641}
+    - target: {fileID: 1322765930438733096, guid: 6c404a767a8e92c49834349ba6448b51, type: 3}
+      propertyPath: highlightColors.Array.data[4].a
+      value: 0.77254903
+      objectReference: {fileID: 0}
     - target: {fileID: 3417591402904272039, guid: 6c404a767a8e92c49834349ba6448b51, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -26,6 +26,7 @@ public enum HighlightColor
 	NONE,
 	MOVE,
 	DASH,
+	THREATEN,
 	ATTACK,
 	SKILL,
 	FACE

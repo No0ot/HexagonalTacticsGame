@@ -22,7 +22,8 @@ public class Job : ScriptableObject
     public int attackRange;
     public float baseThreat;
     public float damageVariance;
-
+    public List<Skill> skills = new List<Skill>();
+    
     public Sprite sprite;
 
 

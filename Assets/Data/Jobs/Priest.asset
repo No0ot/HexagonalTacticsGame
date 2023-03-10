@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jobName: Priest
   mainAttribute: 3
-  growthStrength: 0.5
-  growthFinesse: 1.5
-  growthConcentration: 5
-  growthResolve: 3
+  growthStrength: 1
+  growthFinesse: 1
+  growthConcentration: 4
+  growthResolve: 4
   initiativeBonus: 0
   movementRange: 4
-  dashRange: 0
-  attackRange: 4
-  baseThreat: 60
-  damageVariance: 32
+  dashRange: 1
+  attackRange: 3
+  baseThreat: 50
+  damageVariance: 9
   sprite: {fileID: 21300000, guid: f8e11b96b6bc22a42a9bf1c22e2ce0eb, type: 3}

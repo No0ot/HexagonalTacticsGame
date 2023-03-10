@@ -46,6 +46,12 @@ public class UIManager : MonoBehaviour
     public void ActionAttack()
     {
         BattleManager.Instance.AttackUnit();
+    
+    }
+
+    public void ActionSkill(int buttonNum)
+    {
+        BattleManager.Instance.UseSkill(buttonNum);
     }
 
     public void ResetActions()
