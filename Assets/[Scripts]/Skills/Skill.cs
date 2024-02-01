@@ -9,10 +9,23 @@ public enum SkillType
 
 }
 
-public abstract class Skill
+public abstract class Skill : ScriptableObject
 {
-    public SkillData data;
+    public SkillType type;
 
+    public int range;
+    public int radius;
+    public int cooldown;
+    //public float duration;
+    public float damage;
+    //public Effects[];
 
-    public abstract void UseSkill(List<Unit> target);
+    public virtual void GetHexChoices() { }
+
+    public virtual void UseSkill(List<Unit> target) { }
+
+    public static void GetSingleTarget()
+    {
+
+    }
 }

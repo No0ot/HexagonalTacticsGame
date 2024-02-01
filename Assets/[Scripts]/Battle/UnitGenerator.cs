@@ -9,21 +9,22 @@ public class UnitGenerator : MonoBehaviour
     public List<Race> races = new List<Race>();
     public List<Job> jobs = new List<Job>();
 
-    public Unit CreateUnit(Player player, int level)
+    public Unit CreateUnit(int level)
     {
         Unit newUnit = Instantiate(prefab);
         int randRace = Random.Range(0, races.Count);
         int randJob = Random.Range(0, jobs.Count);
 
-        newUnit.race = races[randRace];
-        newUnit.job = jobs[randJob];
+        newUnit.pawn.race = races[randRace];
+        newUnit.pawn.job = jobs[randJob];
 
-        newUnit.name = newUnit.race.GetRandomName();
-        newUnit.playerNum = player.number;
-        newUnit.playerColor = player.color;
-        newUnit.level = level;
-
-        newUnit.InitializeUnit();
+        newUnit.name = newUnit.pawn.race.GetRandomName();
+        newUnit.pawn.name = newUnit.name;
+       // newUnit.pawn.playerNum = player.number;
+       // newUnit.pawn.playerColor = player.color;
+       // newUnit.pawn.level = level;
+       //
+       // newUnit.pawn.InitializeUnit();
         return newUnit;
     }
 }
