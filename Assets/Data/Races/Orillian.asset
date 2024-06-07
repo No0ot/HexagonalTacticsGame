@@ -14,14 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameList: {fileID: 11400000, guid: ad275092c882d0540bac8a5aad982fe4, type: 2}
   raceName: Orillian
-  baseStrength: 15
-  baseFinesse: 25
-  baseConcentration: 20
-  baseResolve: 10
-  growthStrength: 1
-  growthFinesse: 2
-  growthConcentration: 0.5
-  growthResolve: 0.5
+  stats: {fileID: 11400000, guid: 260e9ccc824a4ad4586f39ac6f85a17c, type: 2}
   color: {r: 0.3673796, g: 0.8113208, b: 0, a: 1}
   bonusMovement: 0
   bonusDash: 0

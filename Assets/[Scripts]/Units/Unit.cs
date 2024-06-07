@@ -37,6 +37,8 @@ public class Unit : MonoBehaviour
     public HexTile tile;
     public HexTile attackDirection;
 
+    public Stats localStats;
+
     [Header("Stats")]
     public float strength;
     public float finesse;
@@ -53,6 +55,7 @@ public class Unit : MonoBehaviour
     public int initiative;
     public float threat;
     HexDirection facing;
+
     public List<Skill> skills;
     public Skill activeSkill;
 
@@ -78,16 +81,16 @@ public class Unit : MonoBehaviour
 
     void SetupStats()
     {
-        strength = race.baseStrength + (race.growthStrength * level) + (job.growthStrength * level);
-        finesse = race.baseFinesse + (race.growthFinesse * level) + (job.growthFinesse * level);
-        concentration = race.baseConcentration + (race.growthConcentration * level) + (job.growthConcentration * level);
-        resolve = race.baseResolve + (race.growthResolve * level) + (job.growthStrength * level);
+        strength = race.stats.GetStat(Stat.STRENGTH) + (race.stats.GetStat(Stat.STRENGTH_GROWTH) * level) + (job.baseStats.GetStat(Stat.STRENGTH_GROWTH) * level);
+        finesse = race.stats.GetStat(Stat.FINESSE) + (race.stats.GetStat(Stat.FINESSE_GROWTH) * level) + (job.baseStats.GetStat(Stat.FINESSE_GROWTH) * level);
+        concentration = race.stats.GetStat(Stat.CONCENTRATION) + (race.stats.GetStat(Stat.CONCENTRATION_GROWTH) * level) + (job.baseStats.GetStat(Stat.CONCENTRATION_GROWTH) * level);
+        resolve = race.stats.GetStat(Stat.RESOLVE) + (race.stats.GetStat(Stat.RESOLVE_GROWTH) * level) + (job.baseStats.GetStat(Stat.FINESSE_GROWTH) * level);
 
         currentHealth = maxHealth = Mathf.Round(strength * 9.6f) + 50f;
 
-        movementRange = job.movementRange + race.bonusMovement;
-        dashRange = job.dashRange + race.bonusDash;
-        threat += job.baseThreat;
+        movementRange = (int)job.baseStats.GetStat(Stat.MOVEMENT_RANGE) + race.bonusMovement;
+        dashRange = (int)job.baseStats.GetStat(Stat.DASH_RANGE) + race.bonusDash;
+        threat += job.baseStats.GetStat(Stat.THREAT);
 
         float attackModifier = 0;
         switch(job.mainAttribute)
@@ -106,7 +109,7 @@ public class Unit : MonoBehaviour
                 break;
         }
         minDamage = attackModifier;
-        maxDamage = job.damageVariance + attackModifier;
+        maxDamage = job.baseStats.GetStat(Stat.DAMAGE_VARIANCE) + attackModifier;
 
     }
 
@@ -122,7 +125,7 @@ public class Unit : MonoBehaviour
 
     public void RollInitiative()
     {
-        initiative = Random.Range(1, 21) + job.initiativeBonus;
+        initiative = Random.Range(1, 21) + (int)job.baseStats.GetStat(Stat.INITIATIVE);
     }
 
     public void Activate()
@@ -242,10 +245,10 @@ public class Unit : MonoBehaviour
 
     public void UseAbility(Unit target)
     {
-        if(activeSkill)
-        {
-           
-        }
+        //if(activeSkill)
+        //{
+        //   
+        //}
     }
 
     public void Die()

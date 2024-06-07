@@ -9,23 +9,12 @@ public class Job : ScriptableObject
     public string jobName;
     public UnitAttributes mainAttribute;
 
-    [Header("Stat Growths")]
-    public float growthStrength;
-    public float growthFinesse;
-    public float growthConcentration;
-    public float growthResolve;
+    public Stats baseStats;
 
-    [Header("Combat Stats")]
-    public int initiativeBonus;
-    public int movementRange;
-    public int dashRange;
-    public int attackRange;
-    public float baseThreat;
-    public float damageVariance;
+
     public List<Skill> skills = new List<Skill>();
     
     public Sprite sprite;
-
 
     //abilities
 }

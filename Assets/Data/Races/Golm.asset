@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameList: {fileID: 11400000, guid: 830ba486e98e89549afeda85d23f8d35, type: 2}
   raceName: Golm
+  stats: {fileID: 11400000, guid: fe875410bbd78c84cbce10cc4479b264, type: 2}
   baseStrength: 30
   baseFinesse: 10
   baseConcentration: 20

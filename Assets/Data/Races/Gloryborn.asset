@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameList: {fileID: 11400000, guid: 61272ae211de141408638cc054634cd6, type: 2}
   raceName: Gloryborn
+  stats: {fileID: 11400000, guid: 512c0784c17ba4b42a714fdfef35265c, type: 2}
   baseStrength: 10
   baseFinesse: 15
   baseConcentration: 20

@@ -155,19 +155,22 @@ public class BattleManager : MonoBehaviour
                     {
                         List<HexTile> open = new List<HexTile>();
                         open.Add(hex);
-                        for(int i = 0; i < currentTurnUnit.activeSkill.data.radius; i++)
+
+                        for(int i = 0; i < currentTurnUnit.activeSkill.radius; i++)
                         {
+                                List<HexTile> open2 = new List<HexTile>();
                             for(int j = 0; j < open.Count; j++)
                             {
-                                List<HexTile> open2 = new List<HexTile>();
+
                                 foreach(HexTile n in open[j].neighbours)
                                 {
                                     if(!open.Contains(n))
                                         open2.Add(n);
                                 }
-                                open.AddRange(open2);
                             }
+                                open.AddRange(open2);
                         }
+
                         List<Unit> units = new List<Unit>();
                         foreach(HexTile t in open)
                         {

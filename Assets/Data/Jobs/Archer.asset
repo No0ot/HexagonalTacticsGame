@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jobName: Archer
   mainAttribute: 1
+  baseStats: {fileID: 0}
   growthStrength: 1.5
   growthFinesse: 5
   growthConcentration: 2.5

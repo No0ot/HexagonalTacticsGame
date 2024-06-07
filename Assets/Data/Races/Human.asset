@@ -14,14 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameList: {fileID: 11400000, guid: eadcdd96fdf5ab443ab7c689c5ca6623, type: 2}
   raceName: Human
-  baseStrength: 20
-  baseFinesse: 10
-  baseConcentration: 25
-  baseResolve: 15
-  growthStrength: 1
-  growthFinesse: 0.5
-  growthConcentration: 1.5
-  growthResolve: 0.75
+  stats: {fileID: 11400000, guid: 35a40114e1725cc4f8a93a899f3340e3, type: 2}
   color: {r: 0, g: 0.288177, b: 1, a: 1}
   bonusMovement: 0
   bonusDash: 0
