@@ -104,30 +104,30 @@ public class HexTile : MonoBehaviour
         }
     }
 
-    //private void OnMouseEnter()
-    //{
-	//	selector.SetActive(true);
-	//	if(occupant)
-    //    {
-	//		UIManager.Instance.selectedUnitProfile.UpdateProfile(occupant);
-    //    }
-	//}
-    //private void OnMouseExit()
-    //{
-	//	selector.SetActive(false);
-	//	UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
-	//}
-	//
-    //private void OnMouseDown()
-    //{
-	//	BattleManager.Instance.selectHex?.Invoke(this);
-	//	selector.GetComponent<SpriteRenderer>().color = Color.red;
-	//}
-	//
-    //private void OnMouseUp()
-    //{
-	//	selector.GetComponent<SpriteRenderer>().color = selectorColor;
-	//}
+    private void OnMouseEnter()
+    {
+		selector.SetActive(true);
+		if(occupant)
+        {
+			UIManager.Instance.selectedUnitProfile.UpdateProfile(occupant);
+        }
+	}
+    private void OnMouseExit()
+    {
+		selector.SetActive(false);
+		UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
+	}
+
+    private void OnMouseDown()
+    {
+		BattleManager.Instance.selectHex?.Invoke(this);
+		selector.GetComponent<SpriteRenderer>().color = Color.red;
+	}
+
+    private void OnMouseUp()
+    {
+		selector.GetComponent<SpriteRenderer>().color = selectorColor;
+	}
 
 	public void ActivateHighlight(HighlightColor color)
     {

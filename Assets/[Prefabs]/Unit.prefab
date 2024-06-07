@@ -25,7 +25,6 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137507409457110312}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
@@ -35,6 +34,7 @@ Transform:
   - {fileID: 7342394751738313079}
   - {fileID: 9183408712058191803}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2137507409457110487
 MonoBehaviour:
@@ -48,28 +48,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fbbabcce0512c44789fbef9b9f24b5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pawn:
-    name: 
-    race: {fileID: 0}
-    job: {fileID: 0}
-    level: 0
-    stats:
-      strength: 0
-      finesse: 0
-      concentration: 0
-      resolve: 0
-      maxHealth: 0
-      currentHealth: 0
-      minDamage: 0
-      maxDamage: 0
-    initiative: 0
-    threat: 0
-    target: {fileID: 0}
-    attackSpeed: 2
-    attackTimer: 0
-  isFighting: 0
-  raceSprite: {fileID: 1714298689651952091}
+  name: 
+  race: {fileID: 11400000, guid: dd53b8e4142bb6c4a8ea9b892011ae5a, type: 2}
+  job: {fileID: 11400000, guid: cd01da8446a03a24daf3086b3ed5f05e, type: 2}
+  playerNum: 0
+  playerColor: {r: 0, g: 0, b: 0, a: 0}
+  raceSprite: {fileID: 0}
   jobSprite: {fileID: 5008081148985253282}
+  level: 0
+  tile: {fileID: 0}
+  attackDirection: {fileID: 0}
+  strength: 0
+  finesse: 0
+  concentration: 0
+  resolve: 0
+  maxHealth: 0
+  currentHealth: 0
+  movementRange: 0
+  dashRange: 0
+  minDamage: 0
+  maxDamage: 0
+  initiative: 0
+  threat: 0
+  skills: []
+  activeSkill: {fileID: 0}
 --- !u!212 &1714298689651952091
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -145,7 +147,6 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4927459535172696063}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -153,6 +154,7 @@ Transform:
   m_Children:
   - {fileID: 6006163872618909441}
   m_Father: {fileID: 2137507409457110486}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5926992898049528082
 GameObject:
@@ -177,13 +179,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5926992898049528082}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2137507409457110486}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7157730574924090011
 GameObject:
@@ -209,13 +211,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7157730574924090011}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2137507409457110486}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5008081148985253282
 SpriteRenderer:
@@ -293,13 +295,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8878029564326035391}
-  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9183408712058191803}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &656442869496323476
 SpriteRenderer:

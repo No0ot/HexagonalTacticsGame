@@ -9,11 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98bb7e055d7a72c4f8b62cf27c7407af, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f11757af086aef4c973cd0263c47f33, type: 3}
   m_Name: Snipe
   m_EditorClassIdentifier: 
   type: 0
+  caster: {fileID: 0}
+  targetHex: {fileID: 0}
   range: 5
-  radius: 2
+  radius: 0
   cooldown: 2
   damage: 100
