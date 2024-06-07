@@ -14,14 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jobName: Knight
   mainAttribute: 0
-  growthStrength: 4
-  growthFinesse: 2
-  growthConcentration: 1
-  growthResolve: 3
-  initiativeBonus: 0
-  movementRange: 6
-  dashRange: 2
-  attackRange: 1
-  baseThreat: 100
-  damageVariance: 26
+  baseStats: {fileID: 11400000, guid: db37124adfce9774eb0346c84ae3b5f2, type: 2}
+  skills: []
   sprite: {fileID: 21300000, guid: c98aee9e683dad9429eb2b2368dbcfc6, type: 3}

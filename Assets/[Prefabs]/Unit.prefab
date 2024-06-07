@@ -58,18 +58,8 @@ MonoBehaviour:
   level: 0
   tile: {fileID: 0}
   attackDirection: {fileID: 0}
-  strength: 0
-  finesse: 0
-  concentration: 0
-  resolve: 0
-  maxHealth: 0
-  currentHealth: 0
-  movementRange: 0
-  dashRange: 0
-  minDamage: 0
-  maxDamage: 0
-  initiative: 0
-  threat: 0
+  localStats: {fileID: 0}
+  statTemplate: {fileID: 11400000, guid: 2bbfcae1a4410bf42a1836376a2ad438, type: 2}
   skills: []
   activeSkill: {fileID: 0}
 --- !u!212 &1714298689651952091

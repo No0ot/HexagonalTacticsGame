@@ -42,6 +42,18 @@ public class Stats : ScriptableObject
 {
     public List<StatInfo> statInfo = new List<StatInfo>();
 
+    public Stats(Stats template)
+    {
+        foreach(StatInfo info in template.statInfo)
+        {
+            StatInfo tempInfo = new StatInfo();
+            tempInfo.statType = info.statType;
+            tempInfo.value = info.value;
+
+            statInfo.Add(tempInfo);
+        }
+    }
+
     public float GetStat(Stat stat)
     {
         foreach(var s in statInfo)
@@ -52,5 +64,34 @@ public class Stats : ScriptableObject
 
         Debug.LogError($"No Stat value found for {stat} on {this.name}");
         return 0;
+    }
+
+    public void SetStat(Stat stat, float newValue)
+    {
+        foreach (var s in statInfo)
+        {
+            if (s.statType == stat)
+            {
+                s.value = newValue;
+                return;
+            }
+        }
+
+        Debug.LogError($"No Stat value found for {stat} on {this.name}");
+    }
+
+    public void EditStat(Stat stat, float newValue)
+    {
+        foreach (var s in statInfo)
+        {
+            if (s.statType == stat)
+            {
+                s.value += newValue;
+                return;
+            }
+
+        }
+
+        Debug.LogError($"No Stat value found for {stat} on {this.name}");
     }
 }

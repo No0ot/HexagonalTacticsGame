@@ -241,7 +241,7 @@ public class BattleManager : MonoBehaviour
     }
     static int SortByInitiative(Unit p1, Unit p2)
     {
-        return -p1.initiative.CompareTo(-p2.initiative);
+        return -p1.localStats.GetStat(Stat.INITIATIVE).CompareTo(-p2.localStats.GetStat(Stat.INITIATIVE));
     }
 
     void RollInitiative()
@@ -281,10 +281,10 @@ public class BattleManager : MonoBehaviour
         {
             case TurnPhase.MOVE:
                 // just call a function in grid to do all this instead, like in attack phase
-                grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.movementRange);
+                grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.MOVEMENT_RANGE));
                 grid.ResetHexPathfindingValues();
                 List<HexTile> temp = new List<HexTile>();
-                temp = grid.GetReachableHexes(currentTurnUnit.tile, currentTurnUnit.dashRange);
+                temp = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.DASH_RANGE));
                 foreach (HexTile tile in grid.highlightedTiles)
                 {
                     if (tile)
@@ -298,7 +298,7 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
             case TurnPhase.ATTACK:
-                grid.GetThreatenedTiles(currentTurnUnit.tile, currentTurnUnit.job.attackRange);
+                grid.GetThreatenedTiles(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.RANGE));
                 List<Unit> threatenedUnits = new List<Unit>();
                 foreach (HexTile tile in grid.highlightedTiles)
                 {

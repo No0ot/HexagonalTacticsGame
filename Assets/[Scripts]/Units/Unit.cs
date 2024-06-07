@@ -7,10 +7,10 @@ public class InitComparison : IComparer<Unit>
 {
     public int Compare(Unit x, Unit y)
     {
-        if (x.initiative == 0 || y.initiative == 0)
+        if (x.localStats.GetStat(Stat.INITIATIVE) == 0 || y.localStats.GetStat(Stat.INITIATIVE) == 0)
             return 0;
 
-        return y.initiative.CompareTo(x.initiative);
+        return y.localStats.GetStat(Stat.INITIATIVE).CompareTo(x.localStats.GetStat(Stat.INITIATIVE));
     }
 }
 
@@ -18,7 +18,7 @@ public class ThreatComparison : IComparer<Unit>
 {
     public int Compare(Unit x, Unit y)
     {
-        return y.threat.CompareTo(x.threat);
+        return y.localStats.GetStat(Stat.THREAT).CompareTo(x.localStats.GetStat(Stat.THREAT));
     }
 }
 
@@ -38,22 +38,23 @@ public class Unit : MonoBehaviour
     public HexTile attackDirection;
 
     public Stats localStats;
+    public Stats statTemplate;
 
-    [Header("Stats")]
-    public float strength;
-    public float finesse;
-    public float concentration;
-    public float resolve;
-    public float maxHealth;
-    public float currentHealth;
-    public int movementRange;
-    public int dashRange;
-    public float minDamage;
-    public float maxDamage;
-
-    [Header("Battle Stats")]
-    public int initiative;
-    public float threat;
+    //[Header("Stats")]
+    //public float strength;
+    //public float finesse;
+    //public float concentration;
+    //public float resolve;
+    //public float maxHealth;
+    //public float currentHealth;
+    //public int movementRange;
+    //public int dashRange;
+    //public float minDamage;
+    //public float maxDamage;
+    //
+    //[Header("Battle Stats")]
+    //public int initiative;
+    //public float threat;
     HexDirection facing;
 
     public List<Skill> skills;
@@ -81,36 +82,54 @@ public class Unit : MonoBehaviour
 
     void SetupStats()
     {
-        strength = race.stats.GetStat(Stat.STRENGTH) + (race.stats.GetStat(Stat.STRENGTH_GROWTH) * level) + (job.baseStats.GetStat(Stat.STRENGTH_GROWTH) * level);
-        finesse = race.stats.GetStat(Stat.FINESSE) + (race.stats.GetStat(Stat.FINESSE_GROWTH) * level) + (job.baseStats.GetStat(Stat.FINESSE_GROWTH) * level);
-        concentration = race.stats.GetStat(Stat.CONCENTRATION) + (race.stats.GetStat(Stat.CONCENTRATION_GROWTH) * level) + (job.baseStats.GetStat(Stat.CONCENTRATION_GROWTH) * level);
-        resolve = race.stats.GetStat(Stat.RESOLVE) + (race.stats.GetStat(Stat.RESOLVE_GROWTH) * level) + (job.baseStats.GetStat(Stat.FINESSE_GROWTH) * level);
+        localStats = new Stats(statTemplate);
 
-        currentHealth = maxHealth = Mathf.Round(strength * 9.6f) + 50f;
+        var tempStrength = race.stats.GetStat(Stat.STRENGTH) + (race.stats.GetStat(Stat.STRENGTH_GROWTH) * level) + (job.baseStats.GetStat(Stat.STRENGTH_GROWTH) * level);
+        localStats.SetStat(Stat.STRENGTH, tempStrength);
+        
+        var tempFinesse = race.stats.GetStat(Stat.FINESSE) + (race.stats.GetStat(Stat.FINESSE_GROWTH) * level) + (job.baseStats.GetStat(Stat.FINESSE_GROWTH) * level);
+        localStats.SetStat(Stat.FINESSE, tempFinesse);
 
-        movementRange = (int)job.baseStats.GetStat(Stat.MOVEMENT_RANGE) + race.bonusMovement;
-        dashRange = (int)job.baseStats.GetStat(Stat.DASH_RANGE) + race.bonusDash;
-        threat += job.baseStats.GetStat(Stat.THREAT);
+        var tempConcentration = race.stats.GetStat(Stat.CONCENTRATION) + (race.stats.GetStat(Stat.CONCENTRATION_GROWTH) * level) + (job.baseStats.GetStat(Stat.CONCENTRATION_GROWTH) * level);
+        localStats.SetStat(Stat.CONCENTRATION, tempConcentration);
+
+        var tempResolve = race.stats.GetStat(Stat.RESOLVE) + (race.stats.GetStat(Stat.RESOLVE_GROWTH) * level) + (job.baseStats.GetStat(Stat.RESOLVE_GROWTH) * level);
+        localStats.SetStat(Stat.RESOLVE, tempResolve);
+
+
+
+        var tempMaxHealth = Mathf.Round(localStats.GetStat(Stat.STRENGTH) * 9.6f) + 50f;
+        localStats.SetStat(Stat.MAX_HEALTH, tempMaxHealth);
+        localStats.SetStat(Stat.CURRENT_HEALTH, tempMaxHealth);
+
+        var tempMovementRange = (int)job.baseStats.GetStat(Stat.MOVEMENT_RANGE) + race.bonusMovement;
+        localStats.SetStat(Stat.MOVEMENT_RANGE, tempMovementRange);
+        var tempDashRange = (int)job.baseStats.GetStat(Stat.DASH_RANGE) + race.bonusDash;
+        localStats.SetStat(Stat.DASH_RANGE, tempDashRange);
+        var tempThreat = job.baseStats.GetStat(Stat.THREAT);
+        localStats.SetStat(Stat.THREAT, tempThreat);
 
         float attackModifier = 0;
         switch(job.mainAttribute)
         {
             case UnitAttributes.STRENGTH:
-                attackModifier = strength;
+                attackModifier = tempStrength;
                 break;
             case UnitAttributes.FINESSE:
-                attackModifier = finesse;
+                attackModifier = tempFinesse;
                 break;
             case UnitAttributes.CONCENTRATION:
-                attackModifier = concentration;
+                attackModifier = tempConcentration;
                 break;
             case UnitAttributes.RESOLVE:
-                attackModifier = resolve;
+                attackModifier = tempResolve;
                 break;
         }
-        minDamage = attackModifier;
-        maxDamage = job.baseStats.GetStat(Stat.DAMAGE_VARIANCE) + attackModifier;
+        localStats.SetStat(Stat.MIN_DAMAGE, attackModifier);
+        var tempMaxDamage = job.baseStats.GetStat(Stat.DAMAGE_VARIANCE) + attackModifier;
+        localStats.SetStat(Stat.MAX_DAMAGE, tempMaxDamage);
 
+        localStats.SetStat(Stat.RANGE, job.baseStats.GetStat(Stat.RANGE));
     }
 
     public void PlaceUnit(HexTile hex)
@@ -125,7 +144,8 @@ public class Unit : MonoBehaviour
 
     public void RollInitiative()
     {
-        initiative = Random.Range(1, 21) + (int)job.baseStats.GetStat(Stat.INITIATIVE);
+        var tempInitiative = Random.Range(1, 21) + (int)job.baseStats.GetStat(Stat.INITIATIVE);
+        localStats.SetStat(Stat.INITIATIVE, tempInitiative);
     }
 
     public void Activate()
@@ -179,7 +199,7 @@ public class Unit : MonoBehaviour
         Debug.DrawLine(other.transform.position, other.transform.position + other.transform.up * 10f, Color.red, 10f);
         Debug.DrawLine(other.tile.transform.position, other.tile.transform.position + attackDirection * 10f, Color.magenta, 10f);
         float angle = Vector3.Angle(other.transform.up, attackDirection);
-        int missChance = 30 + (int)other.finesse / 2;
+        int missChance = 30 + (int)other.localStats.GetStat(Stat.FINESSE) / 2;
         if(angle > 170)
         {
             missChance -= 30;
@@ -204,9 +224,9 @@ public class Unit : MonoBehaviour
         
         if (CheckIfHit(missChance))
         {
-            float damage = Random.Range(minDamage, maxDamage);
+            float damage = Random.Range(localStats.GetStat(Stat.MIN_DAMAGE), localStats.GetStat(Stat.MAX_DAMAGE));
             damage = Mathf.RoundToInt(damage);
-            threat += damage;
+            localStats.EditStat(Stat.THREAT, damage);
             other.TakeDamage(damage);
             //CombatTextGenerator.Instance.NewCombatText(other, damage);
             Debug.Log("And hit! Dealing " + damage);
@@ -223,8 +243,8 @@ public class Unit : MonoBehaviour
 
     public bool CheckIfHit(int missChance)
     {
-        int attackroll = Random.Range(1, 101 + (int)concentration / 2);
-        Debug.Log(name + " has a " + (100 + (int)concentration / 2 - missChance) + "% chance to hit)");
+        int attackroll = Random.Range(1, 101 + (int)localStats.GetStat(Stat.CONCENTRATION) / 2);
+        Debug.Log(name + " has a " + (100 + (int)localStats.GetStat(Stat.CONCENTRATION) / 2 - missChance) + "% chance to hit)");
         Debug.Log("Rolled a " + attackroll + " against " + missChance);
         if (attackroll > missChance)
             return true;
@@ -235,10 +255,10 @@ public class Unit : MonoBehaviour
     public void TakeDamage(float damage)
     {
         CombatTextGenerator.Instance.NewCombatText(this, damage);
-        currentHealth -= damage;
-        if(currentHealth <= 0)
+        localStats.EditStat(Stat.CURRENT_HEALTH, -damage);
+        if(localStats.GetStat(Stat.CURRENT_HEALTH) <= 0)
         {
-            currentHealth = 0;
+            localStats.SetStat(Stat.CURRENT_HEALTH, 0);
             Die();
         }
     }

@@ -45,8 +45,8 @@ public class ProfileViewer : MonoBehaviour
     {
         if (unitReference)
         {
-            health.text = unitReference.currentHealth + "/" + unitReference.maxHealth;
-            healthBar.value = unitReference.currentHealth / unitReference.maxHealth;
+            health.text = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH) + "/" + unitReference.localStats.GetStat(Stat.MAX_HEALTH);
+            healthBar.value = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH) / unitReference.localStats.GetStat(Stat.MAX_HEALTH);
         }
     }
 }

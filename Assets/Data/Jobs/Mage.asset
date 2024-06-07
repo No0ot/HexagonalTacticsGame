@@ -14,14 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jobName: Mage
   mainAttribute: 2
-  growthStrength: 0.5
-  growthFinesse: 1.5
-  growthConcentration: 5
-  growthResolve: 3
-  initiativeBonus: 0
-  movementRange: 4
-  dashRange: 0
-  attackRange: 4
-  baseThreat: 60
-  damageVariance: 32
+  baseStats: {fileID: 11400000, guid: 27afd0ddedc93a14b8b81c335992f88b, type: 2}
+  skills: []
   sprite: {fileID: 21300000, guid: e8858b6d37f90ef44bbc467c79664a18, type: 3}
