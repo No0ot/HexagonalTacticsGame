@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SkillType
+public enum TargetType
 {
-    SINGLE,
-    AOE,
+    ALLY,
+    SELF,
+    ENEMY
 
 }
 
 public abstract class Skill : ScriptableObject
 {
-    public SkillType type;
+    public TargetType type;
 
     public int range;
     public int radius;
@@ -20,4 +21,9 @@ public abstract class Skill : ScriptableObject
     public float damage;
     //public Effects[];
     public abstract void UseSkill(List<Unit> target);
+
+    public void GetTargets()
+    {
+
+    }
 }

@@ -19,7 +19,7 @@ public class BattleManager : MonoBehaviour
     public SelectHexDelegate selectHex;
 
     public List<Unit>[] unitList = new List<Unit>[2] { new List<Unit>(), new List<Unit>()};
-    Queue<Unit> turnOrder = new Queue<Unit>();
+    public Queue<Unit> turnOrder = new Queue<Unit>();
     HexGrid grid;
 
     public Unit currentTurnUnit = null;
@@ -32,6 +32,8 @@ public class BattleManager : MonoBehaviour
     UnitGenerator unitGenerator;
     public List<Player> players;
     public Color[] playerColors;
+
+    int round;
 
     private void Awake()
     {
@@ -179,18 +181,11 @@ public class BattleManager : MonoBehaviour
                         }
 
                         currentTurnUnit.activeSkill.UseSkill(units);
-                        //if(currentTurnUnit.activeSkill.type == SkillType.AOE)
-                        //{
-                        //
-                        //}
-                        //else
-                        //{
-                        //    Debug.Log("using skill");
-                        //    if (hex.occupant)
-                        //    {
-                        //        currentTurnUnit.UseAbility(hex.occupant);
-                        //    }
-                        //}
+
+                        UIManager.Instance.DisableAction(2);
+                        UIManager.Instance.ShowSkills(false);
+                        grid.ResetTiles();
+
                         break;
                     }
                 }
@@ -224,6 +219,8 @@ public class BattleManager : MonoBehaviour
 
     public void RoundStart()
     {
+        round++;
+        UIManager.Instance.UpdateRoundCounter(round);
         RollInitiative();
 
         InitComparison comp = new InitComparison();
@@ -241,7 +238,7 @@ public class BattleManager : MonoBehaviour
     }
     static int SortByInitiative(Unit p1, Unit p2)
     {
-        return -p1.localStats.GetStat(Stat.INITIATIVE).CompareTo(-p2.localStats.GetStat(Stat.INITIATIVE));
+        return -p1.localStats.GetStat(Stat.INITIATIVE).CalculateFinalValue().CompareTo(-p2.localStats.GetStat(Stat.INITIATIVE).CalculateFinalValue());
     }
 
     void RollInitiative()
@@ -258,6 +255,7 @@ public class BattleManager : MonoBehaviour
     public void TurnStart()
     {
         phase = TurnPhase.NONE;
+        UIManager.Instance.UpdateTurnOrderBar();
         currentTurnUnit = turnOrder.Dequeue();
 
         currentTurnUnit.Activate();
@@ -281,10 +279,10 @@ public class BattleManager : MonoBehaviour
         {
             case TurnPhase.MOVE:
                 // just call a function in grid to do all this instead, like in attack phase
-                grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.MOVEMENT_RANGE));
+                grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.MOVEMENT_RANGE).CalculateFinalValue());
                 grid.ResetHexPathfindingValues();
                 List<HexTile> temp = new List<HexTile>();
-                temp = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.DASH_RANGE));
+                temp = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.DASH_RANGE).CalculateFinalValue());
                 foreach (HexTile tile in grid.highlightedTiles)
                 {
                     if (tile)
@@ -298,7 +296,7 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
             case TurnPhase.ATTACK:
-                grid.GetThreatenedTiles(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.RANGE));
+                grid.GetThreatenedTiles(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.RANGE).CalculateFinalValue());
                 List<Unit> threatenedUnits = new List<Unit>();
                 foreach (HexTile tile in grid.highlightedTiles)
                 {
@@ -410,6 +408,7 @@ public class BattleManager : MonoBehaviour
         canMove = true;
         grid.ResetTiles();
         currentTurnUnit.Deactivate();
+
         if (turnOrder.Count > 0)
             TurnStart();
         else

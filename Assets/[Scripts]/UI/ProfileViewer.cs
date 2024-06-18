@@ -36,6 +36,7 @@ public class ProfileViewer : MonoBehaviour
         job.text = unitReference.job.name;
         race.text = unitReference.race.name;
         image.sprite = unitReference.job.sprite;
+        image.color = unitReference.race.color;
         race.color = unitReference.race.color;
 
         UpdateReferenceHealth();
@@ -45,8 +46,8 @@ public class ProfileViewer : MonoBehaviour
     {
         if (unitReference)
         {
-            health.text = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH) + "/" + unitReference.localStats.GetStat(Stat.MAX_HEALTH);
-            healthBar.value = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH) / unitReference.localStats.GetStat(Stat.MAX_HEALTH);
+            health.text = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() + "/" + unitReference.localStats.GetStat(Stat.MAX_HEALTH).CalculateFinalValue();
+            healthBar.value = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() / unitReference.localStats.GetStat(Stat.MAX_HEALTH).CalculateFinalValue();
         }
     }
 }

@@ -14,22 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statInfo:
   - statType: 4
-    value: 1.5
+    baseValue: 1.5
   - statType: 5
-    value: 5
+    baseValue: 5
   - statType: 6
-    value: 2.5
+    baseValue: 2.5
   - statType: 7
-    value: 1.25
+    baseValue: 1.25
   - statType: 15
-    value: 1
+    baseValue: 1
   - statType: 10
-    value: 3
+    baseValue: 3
   - statType: 11
-    value: 1
+    baseValue: 1
   - statType: 14
-    value: 12
+    baseValue: 12
   - statType: 16
-    value: 80
+    baseValue: 80
   - statType: 17
-    value: 4
+    baseValue: 4
