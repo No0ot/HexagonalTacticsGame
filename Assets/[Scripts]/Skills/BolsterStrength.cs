@@ -12,8 +12,10 @@ public class BolsterStrength : Skill
     {
         foreach(Unit u in target)
         {
-            u.localStats.GetStat(Stat.STRENGTH).statModifiers.Add(new StatModifier(value, StatModifierType.FLAT, this));
-            u.RecalculateHealth();
+            Effect newEffect = new BuffStrength(value);
+            newEffect.duration = duration;
+            newEffect.ApplyEffect(u);
+            u.effects.Add(newEffect);
         }
     }
 }

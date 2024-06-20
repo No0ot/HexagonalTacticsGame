@@ -61,6 +61,7 @@ public class Unit : MonoBehaviour
     public List<Skill> skills;
     public Skill activeSkill;
 
+    [SerializeReference]
     public List<Effect> effects = new List<Effect>();
 
     private void Awake()
@@ -250,6 +251,7 @@ public class Unit : MonoBehaviour
         else
         {
             //CombatTextGenerator.Instance.NewCombatText(other, 0f);
+            CombatTextGenerator.Instance.NewCombatText(other, 0f);
             Debug.Log(" And missed!");
         }
 
@@ -281,14 +283,39 @@ public class Unit : MonoBehaviour
 
     public void UseAbility(Unit target)
     {
-        //if(activeSkill)
-        //{
-        //   
-        //}
+
     }
 
     public void Die()
     {
         BattleManager.Instance.KillUnit(this);
+    }
+
+    public void StartTurn()
+    {
+        foreach (Effect effect in effects)
+        {
+            if (effect.type == EffectType.CONTINUOUS)
+                effect.ApplyEffect(this);
+        }
+    }
+
+    public void EndTurn()
+    {
+        List<Effect> effectsToRemove = new List<Effect>();
+        foreach(Effect effect in effects)
+        {
+            effect.duration -= 1;
+
+            if(effect.duration <= 0)
+            {
+                effectsToRemove.Add(effect);
+            }
+        }
+
+        foreach(Effect effect in effectsToRemove)
+        {
+            effect.RemoveEffect(this);
+        }
     }
 }

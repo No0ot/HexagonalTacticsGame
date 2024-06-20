@@ -162,4 +162,9 @@ public class Stats : ScriptableObject
 
         Debug.LogError($"No Stat value found for {stat} on {this.name}");
     }
+
+    public void RemoveStatModifer()
+    {
+
+    }
 }

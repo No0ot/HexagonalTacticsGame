@@ -266,6 +266,7 @@ public class BattleManager : MonoBehaviour
         UIManager.Instance.actionBar.SetActive(true);
         UIManager.Instance.ResetActions();
         grid.RecomputeGlobalValues(currentTurnUnit.tile.coordinates);
+        currentTurnUnit.StartTurn();
         //while(turnOrder.Count > 0)
         //{
         //    Unit temp = turnOrder.Dequeue();
@@ -407,6 +408,8 @@ public class BattleManager : MonoBehaviour
         }
         canMove = true;
         grid.ResetTiles();
+
+        currentTurnUnit.EndTurn();
         currentTurnUnit.Deactivate();
 
         if (turnOrder.Count > 0)
