@@ -19,6 +19,7 @@ public enum HexType
 	OPEN,
 	FOREST,
 	ROUGH,
+	IMPASSABLE,
 }
 
 public enum HighlightColor

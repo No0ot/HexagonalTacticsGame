@@ -68,14 +68,18 @@ public class HexGrid : MonoBehaviour
 
     void CreateTile(int q, int r)
     {
-        int rand = Random.Range(0, 5);
+        int rand = Random.Range(0, 10);
         int type;
-        if (rand == 4)
-            type = 2;
-        else if (rand == 3)
+
+        if (rand < 2)
             type = 1;
+        else if (rand < 5)
+            type = 2;
+        else if (rand < 6)
+            type = 3;
         else
             type = 0;
+
         HexTile temp = Instantiate(hexPrefabs[type], this.transform);
         temp.coordinates = new Vector3Int(q, r, -q - r);
         temp.SetSprites();
@@ -121,56 +125,11 @@ public class HexGrid : MonoBehaviour
             tile.neighbours.Add(GetHex(temp + directions[i]));
         }
     }
-
-    public List<HexTile> GetReachableHexes(HexTile startinghex, int range)
+    public List<HexTile> GetThreatenedTiles(HexTile startinghex, int range)
     {
-        List<HexTile> frontier = new List<HexTile>();
-        frontier.Add(startinghex);
-        HexTile current = frontier[0];
-        current.localValue = 0.0f;
-
-        List<HexTile> reached = new List<HexTile>();
-        while (frontier.Count > 0 && current.localValue < range)
+        foreach (HexTile t in hexList)
         {
-            //frontier.OrderBy((p1, p2) => p1.localValue.CompareTo(p2.localValue));
-            LocalValueComparison value = new LocalValueComparison();
-            frontier.Sort(new LocalValueComparison());
-
-            while (frontier.Count > 0 && frontier[0].pathfindingVisited)
-            {
-                frontier.RemoveAt(0);
-            }
-
-            if (frontier.Count == 0)
-                break;
-
-            current = frontier[0];
-            current.pathfindingVisited = true;
-            foreach (HexTile hex in current.neighbours)
-            {
-                if (hex == null)
-                    continue;
-                float templocal = current.localValue + hex.pathfindingCost;
-                if (hex.type != HexType.FOREST && templocal < hex.localValue && !hex.occupant)
-                    hex.localValue = templocal;
-
-                if (hex.type != HexType.FOREST && !hex.pathfindingVisited && hex.localValue <= range && !hex.occupant)
-                {
-                    frontier.Add(hex);
-                    reached.Add(hex);
-                }
-                else
-                    continue;
-            }
-        }
-        return reached;
-    }
-
-    public List<HexTile>GetThreatenedTiles(HexTile startinghex, int range)
-    {
-        foreach(HexTile t in hexList )
-        {
-            if(t.globalValue <= range && CheckLineOfSight(HexLineDraw(startinghex, t)))
+            if (t.globalValue <= range && HexUtil.CheckLineOfSight(HexLineDraw(startinghex, t)))
             {
                 highlightedTiles.Add(t);
                 t.ActivateHighlight(HighlightColor.THREATEN);
@@ -179,70 +138,22 @@ public class HexGrid : MonoBehaviour
         return highlightedTiles;
     }
 
-    bool CheckLineOfSight(List<HexTile> line)
-    {
-        foreach (HexTile h in line)
-        {
-            if (h.type == HexType.FOREST)
-            {
-                return false;
-               
-            }
-        }
-        return true;
-    }
-
-    int DistancebetweenHexs(HexTile a, HexTile b)
-    {
-        return (Mathf.Abs(a.coordinates.x - b.coordinates.x) +
-                  Mathf.Abs(a.coordinates.y - b.coordinates.y) +
-                  Mathf.Abs(a.coordinates.z - b.coordinates.z)) / 2;
-    }
-    Vector3 HexLerp(HexTile a, HexTile b, float t)
-    {
-        Vector3 temp = new Vector3(Mathf.Lerp(a.coordinates.x, b.coordinates.x, t),
-                                   Mathf.Lerp(a.coordinates.y, b.coordinates.y, t),
-                                   Mathf.Lerp(a.coordinates.z, b.coordinates.z, t));
-
-        return temp;
-    }
-
-    HexTile HexRound(Vector3 cube)
-    {
-        float rx = Mathf.Round(cube.x);
-        float ry = Mathf.Round(cube.y);
-        float rz = Mathf.Round(cube.z);
-
-        float x_diff = Mathf.Abs(rx - cube.x);
-        float y_diff = Mathf.Abs(ry - cube.y);
-        float z_diff = Mathf.Abs(rz - cube.z);
-
-        if (x_diff > y_diff && x_diff > z_diff)
-            rx = -ry - rz;
-        else if (y_diff > z_diff)
-            ry = -rx - rz;
-        else
-            rz = -rx - ry;
-
-        return GetHex(new Vector3Int((int)rx, (int)ry, (int)rz));
-    }
-
     public List<HexTile> HexLineDraw(HexTile a, HexTile b)
     {
-        int distance = DistancebetweenHexs(a, b);
+        int distance = HexUtil.DistancebetweenHexs(a, b);
         List<HexTile> results = new List<HexTile>();
-            float num;
+        float num;
         if (distance > 1)
             num = distance;
         else
             num = 1;
 
-       float step = 1.0f / num;
+        float step = 1.0f / num;
 
         for (int i = 0; i < distance; i++)
         {
             //std::cout << thing->getCubeCoordinate().x << " " << thing->getCubeCoordinate().y << " " << thing->getCubeCoordinate().z << std::endl;
-            results.Add(HexRound(HexLerp(a, b, step * i)));
+            results.Add(GetHex(HexUtil.HexRound(HexUtil.HexLerp(a, b, step * i))));
         }
 
         return results;

@@ -59,6 +59,7 @@ public class Unit : MonoBehaviour
     HexDirection facing;
 
     public List<Skill> skills;
+    public List<int> skillCooldowns;
     public Skill activeSkill;
 
     [SerializeReference]
@@ -81,7 +82,11 @@ public class Unit : MonoBehaviour
         foreach(Skill s in job.skills)
         {
             skills.Add(s);
+            
         }
+        skillCooldowns.Add(0);
+        skillCooldowns.Add(0);
+        skillCooldowns.Add(0);
         SetupStats();
     }
 
@@ -281,9 +286,11 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void UseAbility(Unit target)
+    public void UseActiveSkill(HexTile hex, List<Unit> targetedUnits)
     {
-
+        activeSkill.user = this;
+        activeSkill.GetTargets(hex, out targetedUnits);
+        activeSkill.UseSkill(targetedUnits);
     }
 
     public void Die()
@@ -316,6 +323,12 @@ public class Unit : MonoBehaviour
         foreach(Effect effect in effectsToRemove)
         {
             effect.RemoveEffect(this);
+        }
+
+        for(int i = 0; i < skillCooldowns.Count; i++)
+        {
+            if(skillCooldowns[i] > 0)
+                skillCooldowns[i] -= 1;
         }
     }
 }

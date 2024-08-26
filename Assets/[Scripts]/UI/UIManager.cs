@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject actionBar;
     public GameObject skillBar;
+    public List<GameObject> skillButtons = new List<GameObject>();
 
     public ProfileViewer currentUnitProfile;
     public ProfileViewer selectedUnitProfile;
@@ -68,12 +70,36 @@ public class UIManager : MonoBehaviour
 
     public void ShowSkills(bool tf)
     {
+
         if(skillBar.activeInHierarchy && tf)
         {
             skillBar.SetActive(false);
             return;
         }
         skillBar.SetActive(tf);
+
+        if(tf)
+        {
+            for(int i = 0; i < skillButtons.Count; i++)
+            {
+                if(i + 1 > BattleManager.Instance.currentTurnUnit.skills.Count)
+                {
+                    skillButtons[i].GetComponent<Button>().interactable = false;
+                    continue;
+                }
+
+                if (BattleManager.Instance.currentTurnUnit.skillCooldowns[i] > 0)
+                {
+                    skillButtons[i].GetComponent<Button>().interactable = false;
+                }
+                else
+                {
+                    TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
+                    buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
+                    skillButtons[i].GetComponent<Button>().interactable = true;
+                }
+            }
+        }
     }
 
     public void ResetActions()

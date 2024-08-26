@@ -20,7 +20,7 @@ public class BattleManager : MonoBehaviour
 
     public List<Unit>[] unitList = new List<Unit>[2] { new List<Unit>(), new List<Unit>()};
     public Queue<Unit> turnOrder = new Queue<Unit>();
-    HexGrid grid;
+    public HexGrid grid;
 
     public Unit currentTurnUnit = null;
     public HexTile selectedTile { get; set; }
@@ -34,6 +34,7 @@ public class BattleManager : MonoBehaviour
     public Color[] playerColors;
 
     int round;
+    int activeSkillInt;
 
     private void Awake()
     {
@@ -110,88 +111,44 @@ public class BattleManager : MonoBehaviour
 
     void SelectHex(HexTile hex)
     {
+        if (!grid.highlightedTiles.Contains(hex))
+        {
+            Debug.Log("Selected Hex is not a highlighted Hex");
+            return;
+        }
+
         switch (phase)
         {
             case TurnPhase.MOVE:
-                //if (!selectedUnit)
-                //{
-                //    selectedTile = hex;
-                //    if (selectedTile.occupant)
-                //    {
-                //        selectedUnit = selectedTile.occupant;
-                //        UIManager.Instance.selectedUnitProfile.UpdateProfile(selectedUnit);
-                //    }
-                //}
-                //else
-                //{
-                //    if (!hex.occupant)
-                //    {
-                //        //move is done here for now but later the hex will need to be passed to an object that will determine whether a move or attack or rotation needs to be done.
-                //        currentTurnUnit.PlaceUnit(hex);
-                //        selectedUnit = null;
-                //        UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
-                //    }
-                //}
-                foreach(HexTile tile in grid.highlightedTiles)
-                {
-                    if(hex == tile)
-                    {
-                        currentTurnUnit.PlaceUnit(hex);
-                        UIManager.Instance.DisableAction(0);
-                        if(tile.currentHighlight == HighlightColor.MOVE)
-                        {
-                            UIManager.Instance.DisableAction(1);
-                        }
-                        grid.ResetTiles();
-                        grid.RecomputeGlobalValues(currentTurnUnit.tile.coordinates);
-                        break;
-                    }
-                }
-                break;
+
+                 currentTurnUnit.PlaceUnit(hex);
+                 UIManager.Instance.DisableAction(0);
+
+                 if(hex.currentHighlight == HighlightColor.MOVE)
+                 {
+                     UIManager.Instance.DisableAction(1);
+                 }
+
+                 grid.ResetTiles();
+                 grid.RecomputeGlobalValues(currentTurnUnit.tile.coordinates);
+
+                 break;
             case TurnPhase.ATTACK:
                 break;
             case TurnPhase.SKILL:
-                foreach (HexTile tile in grid.highlightedTiles)
-                {
-                    if (hex == tile)
-                    {
-                        List<HexTile> open = new List<HexTile>();
-                        open.Add(hex);
+                
+                 List<Unit> units = new List<Unit>();
+                 currentTurnUnit.UseActiveSkill(hex, units);
 
-                        for(int i = 0; i < currentTurnUnit.activeSkill.radius; i++)
-                        {
-                                List<HexTile> open2 = new List<HexTile>();
-                            for(int j = 0; j < open.Count; j++)
-                            {
+                 currentTurnUnit.skillCooldowns[activeSkillInt] = currentTurnUnit.activeSkill.cooldown;
 
-                                foreach(HexTile n in open[j].neighbours)
-                                {
-                                    if(!open.Contains(n))
-                                        open2.Add(n);
-                                }
-                            }
-                                open.AddRange(open2);
-                        }
+                 UIManager.Instance.DisableAction(2);
+                 UIManager.Instance.ShowSkills(false);
+                 activeSkillInt = 0;
+                 grid.ResetTiles();
 
-                        List<Unit> units = new List<Unit>();
-                        foreach(HexTile t in open)
-                        {
-                            if (t.occupant)
-                                units.Add(t.occupant);
-                        }
-
-                        currentTurnUnit.activeSkill.UseSkill(units);
-
-                        UIManager.Instance.DisableAction(2);
-                        UIManager.Instance.ShowSkills(false);
-                        grid.ResetTiles();
-
-                        break;
-                    }
-                }
-                        break;
+                 break;
             case TurnPhase.FACE:
-
                 for(int i = 0; i < currentTurnUnit.tile.neighbours.Count; i++)
                 {
                     if (currentTurnUnit.tile.neighbours[i])
@@ -280,10 +237,10 @@ public class BattleManager : MonoBehaviour
         {
             case TurnPhase.MOVE:
                 // just call a function in grid to do all this instead, like in attack phase
-                grid.highlightedTiles = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.MOVEMENT_RANGE).CalculateFinalValue());
+                grid.highlightedTiles = HexUtil.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.MOVEMENT_RANGE).CalculateFinalValue());
                 grid.ResetHexPathfindingValues();
                 List<HexTile> temp = new List<HexTile>();
-                temp = grid.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.DASH_RANGE).CalculateFinalValue());
+                temp = HexUtil.GetReachableHexes(currentTurnUnit.tile, (int)currentTurnUnit.localStats.GetStat(Stat.DASH_RANGE).CalculateFinalValue());
                 foreach (HexTile tile in grid.highlightedTiles)
                 {
                     if (tile)
@@ -395,6 +352,7 @@ public class BattleManager : MonoBehaviour
     public void UseSkill(int skillnum)
     {
         currentTurnUnit.activeSkill = currentTurnUnit.skills[skillnum];
+        activeSkillInt = skillnum;
         phase = TurnPhase.SKILL;
         HighlightTiles();
     }

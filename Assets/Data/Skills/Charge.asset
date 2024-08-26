@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1f6438e3eaf85c498235ed5cf102370, type: 3}
-  m_Name: BolsterStrength
+  m_Script: {fileID: 11500000, guid: 60607727fd411124faa5e8300dec0782, type: 3}
+  m_Name: Charge
   m_EditorClassIdentifier: 
-  type: 0
-  range: 3
+  user: {fileID: 0}
+  type: 2
+  range: 5
   radius: 0
   cooldown: 2
-  damage: 0
-  value: 10
-  duration: 2
+  damage: 25
