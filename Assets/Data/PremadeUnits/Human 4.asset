@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0752e3ba0b4a24049bf2cb6daec319c1, type: 3}
+  m_Name: Human 4
+  m_EditorClassIdentifier: 
+  unit:
+    name: John
+    race: {fileID: 11400000, guid: dd53b8e4142bb6c4a8ea9b892011ae5a, type: 2}
+    job: {fileID: 11400000, guid: 2d0f1ef2455f13c49a34a6a06a051aaa, type: 2}
+    level: 50
+    localStats: {fileID: 0}
+    statTemplate: {fileID: 11400000, guid: 2bbfcae1a4410bf42a1836376a2ad438, type: 2}

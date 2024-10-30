@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ProfileViewer : MonoBehaviour
 {
-    public Unit unitReference;
+    public UnitObject unitReference;
 
     public TMP_Text name;
     public TMP_Text job;
@@ -16,7 +16,7 @@ public class ProfileViewer : MonoBehaviour
     public Image image;
 
 
-    public void UpdateProfile(Unit newUnit)
+    public void UpdateProfile(UnitObject newUnit)
     {
         if(newUnit == null)
         {
@@ -32,12 +32,12 @@ public class ProfileViewer : MonoBehaviour
 
         unitReference = newUnit;
 
-        name.text = unitReference.name;
-        job.text = unitReference.job.name;
-        race.text = unitReference.race.name;
-        image.sprite = unitReference.job.sprite;
-        image.color = unitReference.race.color;
-        race.color = unitReference.race.color;
+        name.text = unitReference.unitInfo.name;
+        job.text = unitReference.unitInfo.job.name;
+        race.text = unitReference.unitInfo.race.name;
+        image.sprite = unitReference.unitInfo.job.sprite;
+        image.color = unitReference.unitInfo.race.color;
+        race.color = unitReference.unitInfo.race.color;
 
         UpdateReferenceHealth();
     }
@@ -46,8 +46,8 @@ public class ProfileViewer : MonoBehaviour
     {
         if (unitReference)
         {
-            health.text = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() + "/" + unitReference.localStats.GetStat(Stat.MAX_HEALTH).CalculateFinalValue();
-            healthBar.value = unitReference.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() / unitReference.localStats.GetStat(Stat.MAX_HEALTH).CalculateFinalValue();
+            health.text = unitReference.unitInfo.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() + "/" + unitReference.unitInfo.localStats.GetStat(Stat.MAX_HEALTH).CalculateFinalValue();
+            healthBar.value = unitReference.unitInfo.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() / unitReference.unitInfo.localStats.GetStat(Stat.MAX_HEALTH).CalculateFinalValue();
         }
     }
 }

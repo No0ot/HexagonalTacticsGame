@@ -44,7 +44,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3417591402904272039}
-  - component: {fileID: 1322765930438733096}
   - component: {fileID: 6103529640182036219}
   m_Layer: 6
   m_Name: HexBase
@@ -69,38 +68,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1322765930438733096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 638199138826775274}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecdcea42e9661b84a86b85a2e3128f5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  coordinates: {x: 0, y: 0, z: 0}
-  selector: {fileID: 3491107020680756263}
-  highlight: {fileID: 3747457610586816701}
-  highlightColors:
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 0, g: 0.203542, b: 1, a: 0.5019608}
-  - {r: 0, g: 0.92019224, b: 1, a: 0.5019608}
-  - {r: 1, g: 0.43237165, b: 0, a: 0.59607846}
-  - {r: 0.6132076, g: 0, b: 0.09429437, a: 0.5019608}
-  - {r: 0.65686184, g: 0.3066038, b: 1, a: 0.5019608}
-  - {r: 0.9427508, g: 1, b: 0, a: 0.5019608}
-  currentHighlight: 0
-  occupant: {fileID: 0}
-  type: 0
-  sprites: []
-  neighbours: []
-  pathfindingCost: 0
-  localValue: 100
-  globalValue: 0
-  pathfindingVisited: 0
 --- !u!60 &6103529640182036219
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ public class FloatingCombatText : MonoBehaviour
         rect.position = startingPosition;
         rect.position = camera.WorldToScreenPoint(startingPosition);
     }
-    public void UpdateText(float damage, Unit unit)
+    public void UpdateText(float damage, UnitObject unit)
     {
         //unitRef = unit;
         startingPosition = unit.transform.position;

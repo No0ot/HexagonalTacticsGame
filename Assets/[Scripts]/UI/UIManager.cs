@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 public class UIManager : MonoBehaviour
 {
@@ -17,9 +18,12 @@ public class UIManager : MonoBehaviour
     public ProfileViewer selectedUnitProfile;
 
     public GameObject turnOrderParent;
+    public InitiativeCharacterPortrait initCharacterPortrait;
     public List<InitiativeCharacterPortrait> initiativeCharacterPortraits = new List<InitiativeCharacterPortrait>();
 
     public TMP_Text roundText;
+
+    public UnityEvent<BattleTurnPhase, float> UIButtonPressed;
 
     private void Awake()
     {
@@ -38,12 +42,12 @@ public class UIManager : MonoBehaviour
 
     public void ActionMove()
     {
-        BattleManager.Instance.MoveUnit();
+        UIButtonPressed.Invoke(BattleTurnPhase.MOVE_SHOW, 0.0f);
     }
 
     public void ActionEnd()
     {
-        BattleManager.Instance.FaceUnit();
+        UIButtonPressed.Invoke(BattleTurnPhase.FACEING_SHOW, 0.0f);
     }
 
     public void DisableAction(int button)
@@ -53,19 +57,19 @@ public class UIManager : MonoBehaviour
 
     public void ActionHoverAttack(bool tf)
     {
-        if(actionBar.transform.GetChild(1).GetComponent<Button>().interactable)
-            BattleManager.Instance.ShowThreatendHexs(tf);
+        //if(actionBar.transform.GetChild(1).GetComponent<Button>().interactable)
+        //    BattleManager.Instance.ShowThreatendHexs(tf);
     }
 
     public void ActionAttack()
     {
-        BattleManager.Instance.AttackUnit();
+        //BattleManager.Instance.AttackUnit();
     
     }
 
     public void ActionSkill(int buttonNum)
     {
-        BattleManager.Instance.UseSkill(buttonNum);
+        //BattleManager.Instance.UseSkill(buttonNum);
     }
 
     public void ShowSkills(bool tf)
@@ -80,25 +84,25 @@ public class UIManager : MonoBehaviour
 
         if(tf)
         {
-            for(int i = 0; i < skillButtons.Count; i++)
-            {
-                if(i + 1 > BattleManager.Instance.currentTurnUnit.skills.Count)
-                {
-                    skillButtons[i].GetComponent<Button>().interactable = false;
-                    continue;
-                }
-
-                if (BattleManager.Instance.currentTurnUnit.skillCooldowns[i] > 0)
-                {
-                    skillButtons[i].GetComponent<Button>().interactable = false;
-                }
-                else
-                {
-                    TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
-                    buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
-                    skillButtons[i].GetComponent<Button>().interactable = true;
-                }
-            }
+            //for(int i = 0; i < skillButtons.Count; i++)
+            //{
+            //    if(i + 1 > BattleManager.Instance.currentTurnUnit.skills.Count)
+            //    {
+            //        skillButtons[i].GetComponent<Button>().interactable = false;
+            //        continue;
+            //    }
+            //
+            //    if (BattleManager.Instance.currentTurnUnit.skillCooldowns[i] > 0)
+            //    {
+            //        skillButtons[i].GetComponent<Button>().interactable = false;
+            //    }
+            //    else
+            //    {
+            //        TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
+            //        buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
+            //        skillButtons[i].GetComponent<Button>().interactable = true;
+            //    }
+            //}
         }
     }
 
@@ -110,13 +114,6 @@ public class UIManager : MonoBehaviour
         actionBar.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 
-    public void AddToTurnOrder(Unit unitRef)
-    {
-        var newRef = Instantiate(new InitiativeCharacterPortrait(), turnOrderParent.transform);
-        newRef.unitReference = unitRef;
-        //newRef.Initialize();
-    }
-
     public void UpdateTurnOrderBar()
     {
         var turnOrder = BattleManager.Instance.turnOrder;
@@ -124,9 +121,9 @@ public class UIManager : MonoBehaviour
         {
             port.gameObject.SetActive(false);
         }
-
+        
         int count = 0;
-        foreach(Unit u in turnOrder)
+        foreach(UnitObject u in turnOrder)
         {
             initiativeCharacterPortraits[count].gameObject.SetActive(true);
             initiativeCharacterPortraits[count].Initialize(u);
