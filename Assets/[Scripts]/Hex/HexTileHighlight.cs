@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +22,8 @@ public class HexTileHighlight : MonoBehaviour
     public GameObject rayGO;
 
     public TileHighlight currentHighlight;
+
+    public List<Color> highlightColors;
     private void Start()
     {
         BattleManager.Instance.BroadcastPhase.AddListener(BattlePhaseNotify);
@@ -50,21 +53,25 @@ public class HexTileHighlight : MonoBehaviour
         switch (highlight)
         {
             case TileHighlight.MOVE:
-                outlineGO.GetComponent<MeshRenderer>().material.color = Color.blue;
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[1];
                 break;
             case TileHighlight.DASH:
-                outlineGO.GetComponent<MeshRenderer>().material.color = Color.cyan;
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[2];
                 break;
             case TileHighlight.ATTACK_RANGE:
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[3];
                 break;
             case TileHighlight.ATTACK_TARGET:
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[4];
                 break;
             case TileHighlight.SKILL_RANGE:
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[5];
                 break;
             case TileHighlight.SKILL_TARGET:
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[6];
                 break;
             case TileHighlight.FACE:
-                outlineGO.GetComponent<MeshRenderer>().material.color = Color.yellow;
+                outlineGO.GetComponent<MeshRenderer>().material.color = highlightColors[7];
                 break;
             default:
                 break;

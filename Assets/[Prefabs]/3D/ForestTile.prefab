@@ -163,11 +163,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4958317193568704428, guid: 7f44ac05601df524ab4942f022dfe350, type: 3}
       propertyPath: MovementCost
-      value: 50
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4958317193568704428, guid: 7f44ac05601df524ab4942f022dfe350, type: 3}
       propertyPath: BlocksMovement
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5905208753303999807, guid: 7f44ac05601df524ab4942f022dfe350, type: 3}
       propertyPath: m_Materials.Array.data[0]

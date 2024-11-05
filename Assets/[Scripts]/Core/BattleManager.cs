@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.UI.CanvasScaler;
 
 public enum BattleTurnPhase
 {
+    NONE = -1,
     START,
     IDLE,
     MOVE_SHOW,
@@ -38,7 +41,7 @@ public class BattleManager : MonoBehaviour
     public UnitObject selectedUnit { get; set; }
     public UnitObject attackedUnit = null;
 
-    BattleTurnPhase currentTurnPhase = BattleTurnPhase.START;
+    BattleTurnPhase currentTurnPhase = BattleTurnPhase.NONE;
 
     public UnityEvent<BattleTurnPhase> BroadcastPhase;
 
@@ -98,28 +101,6 @@ public class BattleManager : MonoBehaviour
         UIManager.Instance.UpdateRoundCounter(round);
 
         RollInitiative();
-    
-        InitComparison comp = new InitComparison();
-        List<Unit> sortList = new List<Unit>();
-
-        foreach(Player player in GameManager.Instance.players)
-        {
-            sortList.AddRange(player.units);
-        }
-    
-        sortList.Sort(comp);
-        foreach (Unit unit in sortList)
-        {
-            foreach(UnitObject uObj in totalUnits)
-            {
-                if (uObj.unitInfo == unit)
-                {
-                    turnOrder.Enqueue(uObj);
-                    
-                }
-
-            }
-        }
 
         StartTurnPhaseCoroutine(BattleTurnPhase.START, 0.0f);
         //TurnStart();
@@ -159,19 +140,82 @@ public class BattleManager : MonoBehaviour
     {
         return -p1.unitInfo.localStats.GetStat(Stat.INITIATIVE).CalculateFinalValue().CompareTo(-p2.unitInfo.localStats.GetStat(Stat.INITIATIVE).CalculateFinalValue());
     }
-    
+
+    static int SortByThreat(UnitObject p1, UnitObject p2)
+    {
+        return -p1.unitInfo.localStats.GetStat(Stat.THREAT).CalculateFinalValue().CompareTo(-p2.unitInfo.localStats.GetStat(Stat.THREAT).CalculateFinalValue());
+    }
+
     void RollInitiative()
     {
         foreach(UnitObject unit in totalUnits)
         {
             unit.unitInfo.RollInitiative();
         }
+
+        InitComparison comp = new InitComparison();
+        List<Unit> sortList = new List<Unit>();
+
+        foreach (Player player in GameManager.Instance.players)
+        {
+            sortList.AddRange(player.units);
+        }
+
+        sortList.Sort(comp);
+        foreach (Unit unit in sortList)
+        {
+            foreach (UnitObject uObj in totalUnits)
+            {
+                if (uObj.unitInfo == unit)
+                {
+                    turnOrder.Enqueue(uObj);
+
+                }
+
+            }
+        }
+    }
+
+    UnitObject GetAttackThreatenedTarget(List<UnitObject> sortList)
+    {
+        ThreatComparison comp = new ThreatComparison();
+        List<Unit> unitlist = new List<Unit>();
+
+        foreach(UnitObject uObj in sortList)
+        {
+            unitlist.Add(uObj.unitInfo);
+        }
+
+        unitlist.Sort(comp);
+
+        if(unitlist.Count >= 1)
+        {
+            foreach(UnitObject uObj in sortList)
+            {
+                if(uObj.unitInfo == unitlist[0])
+                {
+                    return uObj;
+                }
+            }
+        }
+
+        Debug.Log("No threatened targets.");
+        return null;
     }
 
     void ShowMoveTiles()
     {
-        List<HexTile> DashTiles = HexPathfinding.GetTilesWithinRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.DASH_RANGE).CalculateFinalValue());
-        List<HexTile> MoveTiles = HexPathfinding.GetTilesWithinRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.MOVEMENT_RANGE).CalculateFinalValue());
+        List<HexTile> DashTiles = new List<HexTile>();
+        List<HexTile> MoveTiles = new List<HexTile>();
+
+        if (!currentTurnUnit.hasDashed)
+        {
+            DashTiles = HexPathfinding.GetTilesWithinMovementRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.DASH_RANGE).CalculateFinalValue());
+        }
+        if (!currentTurnUnit.hasMoved)
+        {
+            MoveTiles = HexPathfinding.GetTilesWithinMovementRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.MOVEMENT_RANGE).CalculateFinalValue());
+        }
 
         foreach(HexTile hex in MoveTiles)
         {
@@ -184,8 +228,55 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    void ShowAttackTiles()
+    {
+        List<HexTile> AttackTiles = HexPathfinding.GetTilesWithinAttackRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.RANGE).CalculateFinalValue());
+
+        List<UnitObject> UnitsInTiles = new List<UnitObject>();
+        foreach (HexTile hex in AttackTiles)
+        {
+            hex.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_RANGE);
+
+            if(hex.Occupant != null)
+            {
+                UnitObject unitOnTile = hex.Occupant; 
+                if(unitOnTile.unitInfo.GetPlayer() != currentTurnUnit.unitInfo.GetPlayer())
+                {
+                    UnitsInTiles.Add(unitOnTile);
+                }
+
+            }
+        }
+        UnitObject threatenedTarget = GetAttackThreatenedTarget(UnitsInTiles);
+        attackedUnit = threatenedTarget;
+
+        foreach(HexTile hex in AttackTiles)
+        {
+            if(hex.Occupant)
+            {
+                if( hex.Occupant == attackedUnit)
+                {
+                    hex.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_TARGET);
+                }
+            }
+        }
+
+    }
+    public void ResolveAttack()
+    {
+        currentTurnUnit.Attack(attackedUnit);
+        UIManager.Instance.DisableAction(1);
+
+        StartTurnPhaseCoroutine(BattleTurnPhase.IDLE, 1.0f);
+    }
+
     void StartTurnPhaseCoroutine(BattleTurnPhase turnPhase, float time)
     {
+        if(turnPhase == currentTurnPhase)
+        {
+            turnPhase = BattleTurnPhase.IDLE;
+        }
+
         IEnumerator Coroutine;
         Coroutine = UpdateTurnPhase(turnPhase, time);
         StartCoroutine(Coroutine);
@@ -208,8 +299,10 @@ public class BattleManager : MonoBehaviour
             case BattleTurnPhase.MOVE:
                 break;
             case BattleTurnPhase.ATTACK_SHOW:
+                ShowAttackTiles();
                 break;
             case BattleTurnPhase.ATTACK:
+                ResolveAttack();
                 break;
             case BattleTurnPhase.SKILL_SHOW:
                 break;
@@ -248,7 +341,8 @@ public class BattleManager : MonoBehaviour
         StartTurnPhaseCoroutine(BattleTurnPhase.MOVE, 0.0f);
         if(highlight == TileHighlight.MOVE)
         {
-
+            UIManager.Instance.DisableAction(0);
+            UIManager.Instance.DisableAction(2);
         }
         else if(highlight == TileHighlight.DASH)
         {
@@ -261,8 +355,13 @@ public class BattleManager : MonoBehaviour
 
     public void FaceUnit(HexTile hexTile)
     {
+        TileHighlight highlight = hexTile.GetComponent<HexTileHighlight>().currentHighlight;
+
+        if (highlight != TileHighlight.FACE)
+            return;
+
         currentTurnUnit.RotateTowards(hexTile);
-        StartTurnPhaseCoroutine(BattleTurnPhase.END, 1.0f);
+        StartTurnPhaseCoroutine(BattleTurnPhase.END, 0.0f);
     }
 
     void HexTileSelected(HexTile hexTile)

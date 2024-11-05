@@ -138,6 +138,10 @@ public class UnitObject : MonoBehaviour
     public List<int> skillCooldowns;
     public Skill activeSkill;
 
+    public bool hasMoved = false;
+    public bool hasDashed = false;
+    public bool hasAttacked = false;
+
     [SerializeReference]
     public List<Effect> effects = new List<Effect>();
 
@@ -206,32 +210,38 @@ public class UnitObject : MonoBehaviour
         transform.rotation = rotation;
     }
 
-    public void Attack(UnitObject other, HexTile direction)
+    public void Attack(UnitObject other)
     {
-        Vector3 attackDirection = direction.transform.position - other.tile.transform.position;
-        //Debug.DrawLine(other.transform.position, other.transform.position + other.transform.up * 10f, Color.red, 10f);
-        //Debug.DrawLine(other.tile.transform.position, other.tile.transform.position + attackDirection * 10f, Color.magenta, 10f);
-        float angle = Vector3.Angle(new Vector3(0f, 1f, 0f), attackDirection);
+        Vector3 noYpos = tile.transform.position;
+        noYpos.y = 0;
+        Vector3 otherNoYpos = other.transform.position;
+        otherNoYpos.y = 0;
+
+        Vector3 attackDirection = noYpos - otherNoYpos;
+        attackDirection.Normalize();
+
+        float angle = Vector3.Angle(attackDirection, other.transform.forward);
+        Debug.Log(angle);
         int missChance = 30 + (int)other.unitInfo.localStats.GetStat(Stat.FINESSE).CalculateFinalValue() / 2;
         if(angle > 170)
         {
             missChance -= 30;
-            Debug.Log(name + " Attacked " + other.name + " from Behind");
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Behind");
         }
         else if(angle > 120)
         {
             missChance -= 15;
-            Debug.Log(name + " Attacked " + other.name + " from Slightly Behind");
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Slightly Behind");
         }
         else if(angle > 50)
         {
             missChance += 10;
-            Debug.Log(name + " Attacked " + other.name + " from Slightly Front");
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Slightly Front");
         }
         else
         {
             missChance += 20;
-            Debug.Log(name + " Attacked " + other.name + " from Front");
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Front");
         }
 
         
@@ -241,12 +251,12 @@ public class UnitObject : MonoBehaviour
             damage = Mathf.RoundToInt(damage);
             unitInfo.localStats.EditStat(Stat.THREAT, damage);
             other.TakeDamage(damage);
-            //CombatTextGenerator.Instance.NewCombatText(other, damage);
+            CombatTextGenerator.Instance.NewCombatText(other, damage);
             Debug.Log("And hit! Dealing " + damage);
         }
         else
         {
-            //CombatTextGenerator.Instance.NewCombatText(other, 0f);
+            CombatTextGenerator.Instance.NewCombatText(other, 0f);
             //CombatTextGenerator.Instance.NewCombatText(other, 0f);
             Debug.Log(" And missed!");
         }

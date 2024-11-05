@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0752e3ba0b4a24049bf2cb6daec319c1, type: 3}
-  m_Name: Human 2
+  m_Name: Orilian - Izky
   m_EditorClassIdentifier: 
   unit:
-    name: Frank
-    race: {fileID: 11400000, guid: dd53b8e4142bb6c4a8ea9b892011ae5a, type: 2}
-    job: {fileID: 11400000, guid: 23dd47115f87ca04e9b70f8b903ad40c, type: 2}
+    name: Izky
+    race: {fileID: 11400000, guid: 29291b55ce734ac4fb211b31fbf2e971, type: 2}
+    job: {fileID: 11400000, guid: c8765cb45bfba6b4baf7a8e2f7594be0, type: 2}
     level: 50
     localStats: {fileID: 0}
     statTemplate: {fileID: 11400000, guid: 2bbfcae1a4410bf42a1836376a2ad438, type: 2}

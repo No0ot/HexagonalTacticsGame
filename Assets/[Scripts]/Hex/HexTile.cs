@@ -15,6 +15,7 @@ public enum TileType
 public class HexTile : MonoBehaviour
 {
     public Vector2Int AxialCoordinates { get; private set; }
+    [SerializeField]
     public float Height { get; private set; }
     public TileType Type { get; private set; }
     public int MovementCost;

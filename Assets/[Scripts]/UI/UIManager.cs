@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 
     public GameObject actionBar;
     public GameObject skillBar;
+    public GameObject attackConfirmButton;
     public List<GameObject> skillButtons = new List<GameObject>();
 
     public ProfileViewer currentUnitProfile;
@@ -63,8 +64,14 @@ public class UIManager : MonoBehaviour
 
     public void ActionAttack()
     {
-        //BattleManager.Instance.AttackUnit();
-    
+        UIButtonPressed.Invoke(BattleTurnPhase.ATTACK_SHOW, 0.0f);
+        attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
+    }
+
+    public void AttackConfirm()
+    {
+        UIButtonPressed.Invoke(BattleTurnPhase.ATTACK, 0.0f);
+        attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
     }
 
     public void ActionSkill(int buttonNum)

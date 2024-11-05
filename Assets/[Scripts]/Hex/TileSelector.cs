@@ -31,6 +31,9 @@ public class TileSelector : MonoBehaviour
         {
             GameObject tile = hit.transform.gameObject;
 
+            if (tile.layer != LayerMask.NameToLayer("Hex"))
+                return;
+
             // Check if we're hovering over a new tile
             if (currentTile != tile)
             {
@@ -45,6 +48,7 @@ public class TileSelector : MonoBehaviour
             // Check for tile selection on mouse click
             if (Input.GetMouseButtonDown(0)) // Left mouse button
             {
+
                 SelectTile(tile);
             }
         }
@@ -63,6 +67,13 @@ public class TileSelector : MonoBehaviour
         {
             highlight.ShowRay(); // Show the outline
         }
+
+        if(tile.GetComponentInParent<HexTile>().Occupant)
+        {
+            UIManager.Instance.selectedUnitProfile.UpdateProfile(tile.GetComponentInParent<HexTile>().Occupant);
+        }
+        else
+            UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
     }
 
     private void RemoveOutline(GameObject tile)
@@ -83,7 +94,7 @@ public class TileSelector : MonoBehaviour
         HexTile hex = tile.GetComponentInParent<HexTile>();
         if (hex)
         {
-            Debug.Log($"Tile {hex.AxialCoordinates} selected!");
+            //Debug.Log($"Tile {hex.AxialCoordinates} selected!");
             hexTileSelected.Invoke(hex);
         }
         else

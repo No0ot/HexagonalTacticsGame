@@ -15,21 +15,31 @@ MonoBehaviour:
   statInfo:
   - statType: 4
     baseValue: 1.5
+    statModifiers: []
   - statType: 5
     baseValue: 5
+    statModifiers: []
   - statType: 6
     baseValue: 2.5
+    statModifiers: []
   - statType: 7
     baseValue: 1.25
+    statModifiers: []
   - statType: 15
     baseValue: 1
+    statModifiers: []
   - statType: 10
-    baseValue: 3
+    baseValue: 7
+    statModifiers: []
   - statType: 11
     baseValue: 1
+    statModifiers: []
   - statType: 14
     baseValue: 12
+    statModifiers: []
   - statType: 16
-    baseValue: 80
+    baseValue: 45
+    statModifiers: []
   - statType: 17
-    baseValue: 4
+    baseValue: 6
+    statModifiers: []

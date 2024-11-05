@@ -71,6 +71,16 @@ MonoBehaviour:
   outlineMaterial: {fileID: 2100000, guid: dd635ad43fd7ef745a5fbc41d3f7da44, type: 2}
   outlineGO: {fileID: 5612586110244943277}
   rayGO: {fileID: 6049088723695129246}
+  currentHighlight: 0
+  highlightColors:
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.45112717, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0.8094106, a: 1}
+  - {r: 1, g: 0, b: 0.13482332, a: 1}
+  - {r: 1, g: 0.94493365, b: 0, a: 1}
 --- !u!1 &3081905990703604251
 GameObject:
   m_ObjectHideFlags: 0
