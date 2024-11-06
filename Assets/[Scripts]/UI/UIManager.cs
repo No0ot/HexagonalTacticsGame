@@ -91,25 +91,25 @@ public class UIManager : MonoBehaviour
 
         if(tf)
         {
-            //for(int i = 0; i < skillButtons.Count; i++)
-            //{
-            //    if(i + 1 > BattleManager.Instance.currentTurnUnit.skills.Count)
-            //    {
-            //        skillButtons[i].GetComponent<Button>().interactable = false;
-            //        continue;
-            //    }
-            //
-            //    if (BattleManager.Instance.currentTurnUnit.skillCooldowns[i] > 0)
-            //    {
-            //        skillButtons[i].GetComponent<Button>().interactable = false;
-            //    }
-            //    else
-            //    {
-            //        TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
-            //        buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
-            //        skillButtons[i].GetComponent<Button>().interactable = true;
-            //    }
-            //}
+            for(int i = 0; i < skillButtons.Count; i++)
+            {
+                if(i + 1 > BattleManager.Instance.currentTurnUnit.skills.Count)
+                {
+                    skillButtons[i].GetComponent<Button>().interactable = false;
+                    continue;
+                }
+            
+                if (BattleManager.Instance.currentTurnUnit.skillCooldowns[i] > 0)
+                {
+                    skillButtons[i].GetComponent<Button>().interactable = false;
+                }
+                else
+                {
+                    TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
+                    buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
+                    skillButtons[i].GetComponent<Button>().interactable = true;
+                }
+            }
         }
     }
 

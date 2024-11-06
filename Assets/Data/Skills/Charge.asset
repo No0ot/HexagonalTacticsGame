@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60607727fd411124faa5e8300dec0782, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a809f762d6342746ac4d9868d11e250, type: 3}
   m_Name: Charge
   m_EditorClassIdentifier: 
   user: {fileID: 0}
@@ -17,4 +17,4 @@ MonoBehaviour:
   range: 5
   radius: 0
   cooldown: 2
-  damage: 25
+  damage: 0
