@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 870157544561614005}
   - component: {fileID: 7565375371530865906}
   - component: {fileID: 3156819717641513526}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: HexRay
   m_TagString: Tile
   m_Icon: {fileID: 0}

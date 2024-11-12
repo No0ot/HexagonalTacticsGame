@@ -91,7 +91,7 @@ public static class HexPathfinding
         Vector2Int[] hexDirections = {
         new Vector2Int(1, 0), new Vector2Int(1, -1), new Vector2Int(0, -1),
         new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(0, 1)
-    };
+        };
 
         Vector2Int currentAxialCoords = hexTile.AxialCoordinates;
 
@@ -150,7 +150,7 @@ public static class HexPathfinding
                         continue;
 
                     // Calculate the movement cost to reach this neighbor
-                    int newCost = currentCost + neighbor.MovementCost + (int)Mathf.Abs(neighbor.Height - currentTile.Height);
+                    int newCost = currentCost + neighbor.MovementCost + ((int)Mathf.Abs(neighbor.Height - currentTile.Height) / 2);
 
                     // If the new cost is within the movement range, add it to the frontier
                     if (newCost <= maxMovementRange)
@@ -215,6 +215,11 @@ public static class HexPathfinding
         HashSet<HexTile> visitedTiles = new HashSet<HexTile>();
         Queue<(HexTile tile, int distance)> frontier = new Queue<(HexTile tile, int distance)>();
 
+        if(maxAttackRange == 0)
+        {
+            tilesInRange.Add(startTile);
+            return tilesInRange;
+        }
         // Track tiles that block LOS in each direction
         frontier.Enqueue((startTile, 0));
         visitedTiles.Add(startTile);
@@ -295,6 +300,25 @@ public static class HexPathfinding
         }
 
         return tilesInLine;
+    }
+
+    public static List<HexTile> GetHexsInDirection(HexTile startTile, int range,Vector2Int direction, Dictionary<Vector2Int, HexTile> hexTiles)
+    {
+        List<HexTile> hexes = new List<HexTile>();
+
+        Vector2Int currentAxialCoords = startTile.AxialCoordinates;
+
+        for(int i = 1; i <= range; i++)
+        {
+            Vector2Int neighborCoords = currentAxialCoords + (direction * i ) ;
+
+            if (hexTiles.ContainsKey(neighborCoords))
+            {
+                hexes.Add(hexTiles[neighborCoords]);
+            }
+        }
+
+        return hexes;
     }
 
     // Rounds a 2D vector in axial space to the nearest hex tile coordinates

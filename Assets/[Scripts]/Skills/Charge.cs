@@ -5,8 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Charge", menuName = "Unit/Skill/Charge")]
 public class Charge : Skill
 {
-    public override void UseSkill(List<UnitObject> targets)
+    public override List<HexTile> GetHexesInRange(Dictionary<Vector2Int, HexTile> hexTiles)
     {
+        throw new System.NotImplementedException();
+    }
+
+    //public override void UseSkill(List<UnitObject> targets)
+    //{
        // Unit target = null;
        // if (targets.Count == 1)
        //     target = targets[0];
@@ -46,5 +51,5 @@ public class Charge : Skill
         //    user.PlaceUnit(chargeTile);
         //    target.TakeDamage(damage);
         //}
-    }
+    //}//
 }

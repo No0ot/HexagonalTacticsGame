@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,59 +7,84 @@ public enum TargetType
 {
     ALLY,
     SELF,
-    ENEMY
-
+    ENEMY,
+    BOTH,
+    ATTACK,
+    SELF_ONATTACK,
 }
 
+[Serializable]
+public class TargetedEffect
+{
+    public TargetType target;
+    public int duration;
+    public Effect effect;
+}
 public abstract class Skill : ScriptableObject
 {
     public UnitObject user;
 
-    public TargetType type;
-
     public int range;
     public int radius;
     public int cooldown;
-    //public float duration;
-    public float damage;
-    //public Effects[];
-    public abstract void UseSkill(List<UnitObject> target);
+    public List<TargetedEffect> effects = new List<TargetedEffect>();
+    public Sprite sprite;
+    public virtual void UseSkill(HexTile targetedHex, Dictionary<Vector2Int, HexTile> hexTiles)
+    {
+        List<UnitObject> targetedUnits = new List<UnitObject>();
 
-    //public void GetTargets(HexTile targetTile, out List<Unit> units)
-    //{
-    //    units = new List<Unit>();
-    //    List<HexTile> open = new List<HexTile>();
-    //    open.Add(targetTile);
-    //
-    //    for (int i = 0; i < radius; i++)
-    //    {
-    //        List<HexTile> open2 = new List<HexTile>();
-    //
-    //        for (int j = 0; j < open.Count; j++)
-    //        {
-    //
-    //            foreach (HexTile n in open[j].neighbours)
-    //            {
-    //                if (!open.Contains(n))
-    //                    open2.Add(n);
-    //            }
-    //        }
-    //        open.AddRange(open2);
-    //    }
-    //
-    //    foreach (HexTile t in open)
-    //    {
-    //        if (t.occupant)
-    //            units.Add(t.occupant);
-    //    }
-    //}
+        List<HexTile> affectedHexes = HexPathfinding.GetTilesWithinAttackRange(targetedHex, hexTiles, radius);
 
-    //public virtual List<HexTile> GetTargetingHexes(HexGrid grid)
-    //{
-    //    List<HexTile> threatHexes = new List<HexTile>();
-    //
-    //    grid.GetThreatenedTiles(user.tile, range);
-    //
-    //    return threatHexes;
-    //}
+        foreach (TargetedEffect tEffect in effects)
+        {
+            Effect newEffect = new Effect(tEffect.effect);
+            newEffect.duration = tEffect.duration;
+
+            switch(tEffect.target)
+            {
+                case TargetType.SELF:
+                    newEffect.ApplyEffect(user);
+                    break;
+
+                case TargetType.ENEMY:
+                    foreach (HexTile hex in affectedHexes)
+                    {
+                        if (hex.Occupant)
+                        {
+                            if (hex.Occupant.unitInfo.GetPlayer() != user.unitInfo.GetPlayer())
+                                newEffect.ApplyEffect(hex.Occupant);
+                        }
+                    }
+                    break;
+
+                case TargetType.BOTH:
+                    foreach (HexTile hex in affectedHexes)
+                    {
+                        if (hex.Occupant)
+                        {
+                            newEffect.ApplyEffect(hex.Occupant);
+                        }
+                    }
+                    break;
+
+                case TargetType.ALLY:
+                    foreach (HexTile hex in affectedHexes)
+                    {
+                        if (hex.Occupant)
+                        {
+                            if(hex.Occupant.unitInfo.GetPlayer() == user.unitInfo.GetPlayer())
+                                newEffect.ApplyEffect(hex.Occupant);
+                        }
+                    }
+                    break;
+
+                case TargetType.ATTACK:
+                    user.attackAppliedEffects.Add(newEffect);
+                    break;
+            }
+        }
+    }
+
+    public abstract List<HexTile> GetHexesInRange(Dictionary<Vector2Int, HexTile> hexTiles);
+
 }

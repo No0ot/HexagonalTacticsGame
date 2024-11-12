@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class TileSelector : MonoBehaviour
 {
@@ -23,6 +25,11 @@ public class TileSelector : MonoBehaviour
 
     private void HandleTileSelection()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            //Debug.Log("Clicked on the UI");
+            return;
+        }
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -30,6 +37,8 @@ public class TileSelector : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, tileLayerMask))
         {
             GameObject tile = hit.transform.gameObject;
+
+            //Debug.Log(tile.layer);
 
             if (tile.layer != LayerMask.NameToLayer("Hex"))
                 return;
@@ -94,7 +103,7 @@ public class TileSelector : MonoBehaviour
         HexTile hex = tile.GetComponentInParent<HexTile>();
         if (hex)
         {
-            //Debug.Log($"Tile {hex.AxialCoordinates} selected!");
+            Debug.Log($"Tile {hex.AxialCoordinates} selected!");
             hexTileSelected.Invoke(hex);
         }
         else

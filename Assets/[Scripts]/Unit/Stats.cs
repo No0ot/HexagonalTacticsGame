@@ -28,7 +28,8 @@ public enum Stat
     // Skill Stats
     RANGE,
     RADIUS,
-    COOLDOWN
+    COOLDOWN,
+    ARMOR, 
 }
 
 public enum StatModifierType
@@ -64,7 +65,7 @@ public class StatInfo
             }
             else if(mod.type == StatModifierType.PERCENT)
             {
-                finalValue += baseValue * (1 + mod.value);
+                finalValue = baseValue * (mod.value);
             }
         }
 

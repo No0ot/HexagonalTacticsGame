@@ -102,6 +102,8 @@ public class Unit
         var tempMaxDamage = job.baseStats.GetStat(Stat.DAMAGE_VARIANCE).CalculateFinalValue() + attackModifier;
         localStats.SetStat(Stat.MAX_DAMAGE, tempMaxDamage);
         localStats.SetStat(Stat.RANGE, job.baseStats.GetStat(Stat.RANGE).CalculateFinalValue());
+        localStats.SetStat(Stat.RADIUS, job.baseStats.GetStat(Stat.RADIUS).CalculateFinalValue());
+        localStats.SetStat(Stat.ARMOR, job.baseStats.GetStat(Stat.ARMOR).CalculateFinalValue());
     }
 
     public void RecalculateHealth()
@@ -142,8 +144,13 @@ public class UnitObject : MonoBehaviour
     public bool hasDashed = false;
     public bool hasAttacked = false;
 
+    public int  actionPoint = 2;
+
     [SerializeReference]
     public List<Effect> effects = new List<Effect>();
+
+    [SerializeReference]
+    public List<Effect> attackAppliedEffects = new List<Effect>();
 
     private void Awake()
     {
@@ -222,7 +229,7 @@ public class UnitObject : MonoBehaviour
 
         float angle = Vector3.Angle(attackDirection, other.transform.forward);
         Debug.Log(angle);
-        int missChance = 30 + (int)other.unitInfo.localStats.GetStat(Stat.FINESSE).CalculateFinalValue() / 2;
+        float missChance = 30 + (int)other.unitInfo.localStats.GetStat(Stat.FINESSE).CalculateFinalValue() / unitInfo.level;
         if(angle > 170)
         {
             missChance -= 30;
@@ -247,11 +254,17 @@ public class UnitObject : MonoBehaviour
         
         if (CheckIfHit(missChance))
         {
+
             float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
             damage = Mathf.RoundToInt(damage);
             unitInfo.localStats.EditStat(Stat.THREAT, damage);
             other.TakeDamage(damage);
             CombatTextGenerator.Instance.NewCombatText(other, damage);
+
+            foreach(Effect effect in attackAppliedEffects)
+            {
+                effect.ApplyEffect(other);
+            }
             Debug.Log("And hit! Dealing " + damage);
         }
         else
@@ -261,11 +274,13 @@ public class UnitObject : MonoBehaviour
             Debug.Log(" And missed!");
         }
 
-        other.Deactivate();
+        attackAppliedEffects.Clear();
+
+            other.Deactivate();
         other.attackDirection = null;
     }
 
-    public bool CheckIfHit(int missChance)
+    public bool CheckIfHit(float missChance)
     {
         int attackroll = UnityEngine.Random.Range(1, 101 + (int)unitInfo.localStats.GetStat(Stat.CONCENTRATION).CalculateFinalValue() / 2);
         Debug.Log(name + " has a " + (100 + (int)unitInfo.localStats.GetStat(Stat.CONCENTRATION).CalculateFinalValue() / 2 - missChance) + "% chance to hit)");
@@ -278,8 +293,9 @@ public class UnitObject : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        float newDamage = Mathf.Clamp(damage - unitInfo.localStats.GetStat(Stat.ARMOR).CalculateFinalValue(),0f, 9999f);
         //CombatTextGenerator.Instance.NewCombatText(this, damage);
-        unitInfo.localStats.EditStat(Stat.CURRENT_HEALTH, -damage);
+        unitInfo.localStats.EditStat(Stat.CURRENT_HEALTH, -newDamage);
         if(unitInfo.localStats.GetStat(Stat.CURRENT_HEALTH).CalculateFinalValue() <= 0)
         {
             unitInfo.localStats.SetStat(Stat.CURRENT_HEALTH, 0);
@@ -287,12 +303,12 @@ public class UnitObject : MonoBehaviour
         }
     }
 
-    public void UseActiveSkill(HexTile hex, List<UnitObject> targetedUnits)
-    {
-        activeSkill.user = this;
-        //activeSkill.GetTargets(hex, out targetedUnits);
-        activeSkill.UseSkill(targetedUnits);
-    }
+    //public void UseActiveSkill(HexTile hex, List<UnitObject> targetedUnits)
+    //{
+    //    activeSkill.user = this;
+    //    //activeSkill.GetTargets(hex, out targetedUnits);
+    //    activeSkill.UseSkill(targetedUnits);
+    //}
 
     public void GetAttackThreatenedHexes()
     {
@@ -311,6 +327,12 @@ public class UnitObject : MonoBehaviour
             if (effect.type == EffectType.CONTINUOUS)
                 effect.ApplyEffect(this);
         }
+
+        hasMoved = false;
+        hasDashed = false;
+        hasAttacked = false;
+
+        actionPoint = 2;
     }
 
     public void EndTurn()
@@ -331,10 +353,26 @@ public class UnitObject : MonoBehaviour
             effect.RemoveEffect(this);
         }
 
+        attackAppliedEffects.Clear();
+
         for(int i = 0; i < skillCooldowns.Count; i++)
         {
             if(skillCooldowns[i] > 0)
                 skillCooldowns[i] -= 1;
+        }
+    }
+
+    public void UseActionPoint()
+    {
+        actionPoint -= 1;
+
+        if(actionPoint <= 0)
+        {
+            if(hasDashed)
+                UIManager.Instance.DisableAction(0);
+
+            UIManager.Instance.DisableAction(1);
+            UIManager.Instance.DisableAction(2);
         }
     }
 }

@@ -29,7 +29,7 @@ MonoBehaviour:
     baseValue: 0
     statModifiers: []
   - statType: 10
-    baseValue: 6
+    baseValue: 8
     statModifiers: []
   - statType: 11
     baseValue: 3
@@ -42,4 +42,10 @@ MonoBehaviour:
     statModifiers: []
   - statType: 17
     baseValue: 3
+    statModifiers: []
+  - statType: 18
+    baseValue: 0
+    statModifiers: []
+  - statType: 20
+    baseValue: 0
     statModifiers: []

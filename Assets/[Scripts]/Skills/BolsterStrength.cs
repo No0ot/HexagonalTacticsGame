@@ -8,14 +8,19 @@ public class BolsterStrength : Skill
     public float value;
     public int duration;
 
-    public override void UseSkill(List<UnitObject> target)
+    public override List<HexTile> GetHexesInRange(Dictionary<Vector2Int, HexTile> hexTiles)
     {
-        foreach(UnitObject u in target)
-        {
-            Effect newEffect = new BuffStrength(value);
-            newEffect.duration = duration;
-            newEffect.ApplyEffect(u);
-            u.effects.Add(newEffect);
-        }
+        throw new System.NotImplementedException();
     }
+
+    //public override void UseSkill(List<UnitObject> target)
+    //{
+    //    foreach(UnitObject u in target)
+    //    {
+    //        Effect newEffect = new BuffStrength(value);
+    //        newEffect.duration = duration;
+    //        newEffect.ApplyEffect(u);
+    //        u.effects.Add(newEffect);
+    //    }
+    //}
 }

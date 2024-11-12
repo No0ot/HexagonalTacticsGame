@@ -74,7 +74,14 @@ public class UIManager : MonoBehaviour
         attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
     }
 
-    public void ActionSkill(int buttonNum)
+    public void ShowSkill(int buttonNum)
+    {
+        UIButtonPressed.Invoke(BattleTurnPhase.SKILL_SHOW, 0.0f);
+        //attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
+        BattleManager.Instance.activeSkillNum = buttonNum;
+    }
+
+    public void SkillConfirm()
     {
         //BattleManager.Instance.UseSkill(buttonNum);
     }
