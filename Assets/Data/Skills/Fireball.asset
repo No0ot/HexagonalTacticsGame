@@ -15,7 +15,7 @@ MonoBehaviour:
   user: {fileID: 0}
   range: 0
   radius: 2
-  cooldown: 3
+  cooldown: 2
   effects:
   - target: 1
     duration: 1

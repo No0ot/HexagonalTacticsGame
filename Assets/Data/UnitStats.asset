@@ -70,3 +70,12 @@ MonoBehaviour:
   - statType: 20
     baseValue: 0
     statModifiers: []
+  - statType: 21
+    baseValue: 0
+    statModifiers: []
+  - statType: 22
+    baseValue: 0
+    statModifiers: []
+  - statType: 23
+    baseValue: 0
+    statModifiers: []

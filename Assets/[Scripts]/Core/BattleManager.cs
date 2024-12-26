@@ -269,10 +269,15 @@ private void Awake()
         
         foreach (HexTile hex in AOETiles)
         {
+            hex.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_TARGET);
             if(hex.Occupant)
             {
-                hex.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_TARGET);
-                attackedUnits.Add(hex.Occupant);
+                UnitObject unitOnTile = hex.Occupant;
+                if (unitOnTile.unitInfo.GetPlayer() != currentTurnUnit.unitInfo.GetPlayer())
+                {
+                    attackedUnits.Add(hex.Occupant);
+                }
+                
             }
         }
 

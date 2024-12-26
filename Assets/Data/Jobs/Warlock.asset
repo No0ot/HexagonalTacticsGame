@@ -16,5 +16,7 @@ MonoBehaviour:
   mainAttribute: 2
   baseStats: {fileID: 11400000, guid: 36d8a66655b36f24d8d910e8fdcca895, type: 2}
   color: {r: 0.36741173, g: 0.043137252, b: 1, a: 1}
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: 536ab4666755356449779e90c9ad7b73, type: 2}
+  - {fileID: 11400000, guid: 56f2d894134401f4b94b81e821bc6a57, type: 2}
   sprite: {fileID: 21300000, guid: 1af44a432b8268e4a8c74c31e0a77aa2, type: 3}

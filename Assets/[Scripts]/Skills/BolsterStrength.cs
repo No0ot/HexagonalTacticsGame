@@ -5,9 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BolsterStrength", menuName = "Unit/Skill/Bolster Strength")]
 public class BolsterStrength : Skill
 {
-    public float value;
-    public int duration;
-
     public override List<HexTile> GetHexesInRange(Dictionary<Vector2Int, HexTile> hexTiles)
     {
         throw new System.NotImplementedException();

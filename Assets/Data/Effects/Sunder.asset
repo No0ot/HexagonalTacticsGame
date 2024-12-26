@@ -10,14 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
-  m_Name: Buff(%) Strength
+  m_Name: Sunder
   m_EditorClassIdentifier: 
-  duration: 2
+  duration: 0
   type: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: -1493952981, guid: a8a77b5e9c07bc14eb5dda1fc5e70757, type: 3}
   mods:
-  - moddedStat: 0
+  - moddedStat: 20
     modifier:
-      value: 1.2
+      value: 0.8
       type: 1
       order: 0
+    scaleWithMainStat: 0
+    mainStatScaleValue: 0
+  source: {fileID: 0}

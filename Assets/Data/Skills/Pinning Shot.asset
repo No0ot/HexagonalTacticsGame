@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
-  m_Name: DBuff(10%) Strength
+  m_Script: {fileID: 11500000, guid: 4ea97dc9db79f064ba1152112dbd3db3, type: 3}
+  m_Name: Pinning Shot
   m_EditorClassIdentifier: 
-  duration: 0
-  type: 0
+  user: {fileID: 0}
+  range: 0
+  radius: 0
+  cooldown: 2
+  effects:
+  - target: 4
+    duration: 1
+    effect: {fileID: 11400000, guid: 2fbc2208a52b9524989ff4d88fbc10f8, type: 2}
   sprite: {fileID: 0}
-  mods:
-  - moddedStat: 0
-    modifier:
-      value: 0.9
-      type: 1
-      order: 0

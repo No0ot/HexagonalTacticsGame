@@ -10,7 +10,6 @@ public enum TargetType
     ENEMY,
     BOTH,
     ATTACK,
-    SELF_ONATTACK,
 }
 
 [Serializable]
@@ -37,7 +36,7 @@ public abstract class Skill : ScriptableObject
 
         foreach (TargetedEffect tEffect in effects)
         {
-            Effect newEffect = new Effect(tEffect.effect);
+            Effect newEffect = new Effect(tEffect.effect, user);
             newEffect.duration = tEffect.duration;
 
             switch(tEffect.target)

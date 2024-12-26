@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -16,6 +17,9 @@ public class EffectMod
 {
     public Stat moddedStat;
     public StatModifier modifier;
+
+    public bool scaleWithMainStat = false;
+    public float mainStatScaleValue = 1.0f;
 }
 [Serializable]
 [CreateAssetMenu(fileName = "New Effect", menuName = "Unit/Effect")]
@@ -26,21 +30,35 @@ public class Effect : ScriptableObject
     //public TargetType target;
     public Sprite sprite;
     public List<EffectMod> mods = new List<EffectMod>();
+    [HideInInspector]
+    public UnitObject source;
 
-    public Effect(Effect template)
+    public Effect(Effect template, UnitObject newSource)
     {
         duration = template.duration;
         type = template.type;
         //target = template.target;
         sprite = template.sprite;
         mods = template.mods;
+        source = newSource;
     }
     public void ApplyEffect(UnitObject target)
     {
         target.effects.Add(this);
         foreach(EffectMod mod in mods)
         {
-            target.unitInfo.localStats.GetStat(mod.moddedStat).statModifiers.Add(mod.modifier);
+            if (mod.scaleWithMainStat)
+            {
+                mod.modifier.value += source.unitInfo.localStats.GetStat(source.unitInfo.job.mainAttribute).CalculateFinalValue() * mod.mainStatScaleValue;
+            }
+
+            if(mod.moddedStat == Stat.CURRENT_HEALTH)
+            {
+                //target.unitInfo.localStats.EditStat(Stat.CURRENT_HEALTH, -mod.modifier.value);
+                target.TakeDamage(mod.modifier.value);
+            }
+            else
+                target.unitInfo.localStats.GetStat(mod.moddedStat).statModifiers.Add(mod.modifier);
         }
 
         target.unitInfo.RecalculateHealth();

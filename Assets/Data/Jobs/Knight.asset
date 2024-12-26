@@ -17,5 +17,7 @@ MonoBehaviour:
   baseStats: {fileID: 11400000, guid: db37124adfce9774eb0346c84ae3b5f2, type: 2}
   color: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
   skills:
+  - {fileID: 11400000, guid: 9211e0ae462ccdb4f91944c723404d10, type: 2}
   - {fileID: 11400000, guid: 3b6cce495bd23f14cb3400311825103a, type: 2}
+  - {fileID: 11400000, guid: 0858dc65a53621746b886aa3a46a07cc, type: 2}
   sprite: {fileID: 21300000, guid: fca6188a4149d3a45bf56967ab6cabfc, type: 3}

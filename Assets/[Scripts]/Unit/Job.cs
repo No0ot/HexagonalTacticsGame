@@ -7,7 +7,7 @@ public class Job : ScriptableObject
 {
     [Header("Information")]
     public string jobName;
-    public UnitAttributes mainAttribute;
+    public Stat mainAttribute;
 
     public Stats baseStats;
     public Color color;

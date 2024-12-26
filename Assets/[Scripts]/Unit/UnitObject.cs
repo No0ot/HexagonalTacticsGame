@@ -85,17 +85,20 @@ public class Unit
         float attackModifier = 0;
         switch (job.mainAttribute)
         {
-            case UnitAttributes.STRENGTH:
+            case Stat.STRENGTH:
                 attackModifier = tempStrength;
                 break;
-            case UnitAttributes.FINESSE:
+            case Stat.FINESSE:
                 attackModifier = tempFinesse;
                 break;
-            case UnitAttributes.CONCENTRATION:
+            case Stat.CONCENTRATION:
                 attackModifier = tempConcentration;
                 break;
-            case UnitAttributes.RESOLVE:
+            case Stat.RESOLVE:
                 attackModifier = tempResolve;
+                break;
+            default:
+                attackModifier = tempStrength;
                 break;
         }
         localStats.SetStat(Stat.MIN_DAMAGE, attackModifier);
@@ -104,6 +107,9 @@ public class Unit
         localStats.SetStat(Stat.RANGE, job.baseStats.GetStat(Stat.RANGE).CalculateFinalValue());
         localStats.SetStat(Stat.RADIUS, job.baseStats.GetStat(Stat.RADIUS).CalculateFinalValue());
         localStats.SetStat(Stat.ARMOR, job.baseStats.GetStat(Stat.ARMOR).CalculateFinalValue());
+        localStats.SetStat(Stat.DAMAGE_MULTIPLIER, 1.0f);
+        localStats.SetStat(Stat.ACCURACY, 0.0f);
+        localStats.SetStat(Stat.NUM_OF_ATTACKS, 1.0f);
     }
 
     public void RecalculateHealth()
@@ -251,32 +257,34 @@ public class UnitObject : MonoBehaviour
             Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Front");
         }
 
-        
-        if (CheckIfHit(missChance))
+        for (int i = 0; i < unitInfo.localStats.GetStat(Stat.NUM_OF_ATTACKS).CalculateFinalValue(); i++)
         {
-
-            float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
-            damage = Mathf.RoundToInt(damage);
-            unitInfo.localStats.EditStat(Stat.THREAT, damage);
-            other.TakeDamage(damage);
-            CombatTextGenerator.Instance.NewCombatText(other, damage);
-
-            foreach(Effect effect in attackAppliedEffects)
+            if (CheckIfHit(missChance))
             {
-                effect.ApplyEffect(other);
+
+                float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
+                damage *= unitInfo.localStats.GetStat(Stat.DAMAGE_MULTIPLIER).CalculateFinalValue();
+                damage = Mathf.RoundToInt(damage);
+                unitInfo.localStats.EditStat(Stat.THREAT, damage);
+                other.TakeDamage(damage);
+                CombatTextGenerator.Instance.NewCombatText(other, damage);
+
+                foreach (Effect effect in attackAppliedEffects)
+                {
+                    effect.ApplyEffect(other);
+                }
+                Debug.Log("And hit! Dealing " + damage);
             }
-            Debug.Log("And hit! Dealing " + damage);
-        }
-        else
-        {
-            CombatTextGenerator.Instance.NewCombatText(other, 0f);
-            //CombatTextGenerator.Instance.NewCombatText(other, 0f);
-            Debug.Log(" And missed!");
-        }
+            else
+            {
+                CombatTextGenerator.Instance.NewCombatText(other, 0f);
+                //CombatTextGenerator.Instance.NewCombatText(other, 0f);
+                Debug.Log(" And missed!");
+            }
 
-        attackAppliedEffects.Clear();
-
-            other.Deactivate();
+            attackAppliedEffects.Clear();
+        }
+        other.Deactivate();
         other.attackDirection = null;
     }
 

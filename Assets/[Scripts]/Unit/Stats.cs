@@ -29,7 +29,10 @@ public enum Stat
     RANGE,
     RADIUS,
     COOLDOWN,
-    ARMOR, 
+    ARMOR,
+    DAMAGE_MULTIPLIER,
+    ACCURACY,
+    NUM_OF_ATTACKS
 }
 
 public enum StatModifierType
@@ -80,6 +83,7 @@ public class StatModifier
     public StatModifierType type;
     public int order;
     public object source;
+
     public StatModifier(float stat, StatModifierType stattype, int newOrder, object newSource)
     {
         value = stat;

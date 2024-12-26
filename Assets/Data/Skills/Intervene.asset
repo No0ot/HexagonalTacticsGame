@@ -9,20 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
-  m_Name: B(20%) Damage
+  m_Script: {fileID: 11500000, guid: 7a809f762d6342746ac4d9868d11e250, type: 3}
+  m_Name: Intervene
   m_EditorClassIdentifier: 
-  duration: 1
-  type: 0
+  user: {fileID: 0}
+  range: 6
+  radius: 1
+  cooldown: 3
+  effects:
+  - target: 0
+    duration: 3
+    effect: {fileID: 11400000, guid: 17eb0477653f5444580aa2fdb921e352, type: 2}
   sprite: {fileID: 0}
-  mods:
-  - moddedStat: 12
-    modifier:
-      value: 1.2
-      type: 1
-      order: 0
-  - moddedStat: 13
-    modifier:
-      value: 1.2
-      type: 1
-      order: 0

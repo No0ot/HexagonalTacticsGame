@@ -167,50 +167,6 @@ public static class HexPathfinding
 
     public static List<HexTile> GetTilesWithinAttackRange(HexTile startTile, Dictionary<Vector2Int, HexTile> hexTiles, int maxAttackRange)
     {
-        //// Create a list to store reachable tiles within the movement range
-        //List<HexTile> tilesInRange = new List<HexTile>();
-        //
-        //// A dictionary to store the movement cost to reach each tile
-        //Dictionary<HexTile, int> movementCostSoFar = new Dictionary<HexTile, int>();
-        //Queue<HexTile> frontier = new Queue<HexTile>();
-        //
-        //// Initialize the starting tile
-        //frontier.Enqueue(startTile);
-        //movementCostSoFar[startTile] = 0;
-        //
-        //// Perform BFS with movement cost tracking
-        //while (frontier.Count > 0)
-        //{
-        //    HexTile currentTile = frontier.Dequeue();
-        //    int currentCost = movementCostSoFar[currentTile];
-        //
-        //    // Add the current tile to the list if within range
-        //    if (currentCost <= maxAttackRange)
-        //    {
-        //        tilesInRange.Add(currentTile);
-        //
-        //        // Check neighbors for further expansion
-        //        foreach (HexTile neighbor in GetNeighbors(currentTile, hexTiles))
-        //        {
-        //            // Skip if the tile blocks movement or if it has already been processed
-        //            if (neighbor.BlocksLOS || movementCostSoFar.ContainsKey(neighbor))
-        //                continue;
-        //
-        //            // Calculate the movement cost to reach this neighbor
-        //            int newCost = currentCost + 1;
-        //
-        //            // If the new cost is within the movement range, add it to the frontier
-        //            if (newCost <= maxAttackRange)
-        //            {
-        //                frontier.Enqueue(neighbor);
-        //                movementCostSoFar[neighbor] = newCost;
-        //            }
-        //        }
-        //    }
-        //}
-        //
-        //return tilesInRange;
-
         List<HexTile> tilesInRange = new List<HexTile>();
         HashSet<HexTile> visitedTiles = new HashSet<HexTile>();
         Queue<(HexTile tile, int distance)> frontier = new Queue<(HexTile tile, int distance)>();
@@ -272,6 +228,81 @@ public static class HexPathfinding
         return tilesInRange;
     }
 
+    public static List<HexTile> GetTilesWithinAttackRange(HexTile startTile, Dictionary<Vector2Int, HexTile> hexTiles, int maxAttackRange, bool includeUnits)
+    {
+        List<HexTile> tilesInRange = new List<HexTile>();
+        HashSet<HexTile> visitedTiles = new HashSet<HexTile>();
+        Queue<(HexTile tile, int distance)> frontier = new Queue<(HexTile tile, int distance)>();
+
+        if (maxAttackRange == 0)
+        {
+            tilesInRange.Add(startTile);
+            return tilesInRange;
+        }
+        // Track tiles that block LOS in each direction
+        frontier.Enqueue((startTile, 0));
+        visitedTiles.Add(startTile);
+
+        while (frontier.Count > 0)
+        {
+            (HexTile currentTile, int currentDistance) = frontier.Dequeue();
+
+            // Only add tiles within the specified attack range and not blocking LOS
+            if (currentDistance <= maxAttackRange)
+            {
+                if ((!currentTile.BlocksLineOfSight() || currentTile == startTile))
+                {
+                    //Do Line Draw
+
+                    List<HexTile> hexesBetween = HexLineDraw(startTile, currentTile, hexTiles);
+                    bool blockingLos = false;
+                    foreach (HexTile betweenHex in hexesBetween)
+                    {
+                        if (betweenHex.BlocksLineOfSight())
+                        {
+                            blockingLos = true;
+                            break;
+                        }
+                    }
+
+                    if (!blockingLos)
+                    {
+                        if(includeUnits)
+                        {
+                            if(currentTile.Occupant)
+                                tilesInRange.Add(currentTile);
+                        }
+                        else
+                        {
+                            if (!currentTile.Occupant)
+                                tilesInRange.Add(currentTile);
+                        }
+                        
+                    }
+                }
+
+
+            }
+
+            // Stop expanding if the distance limit is reached or if the current tile blocks LOS
+            if (currentDistance < maxAttackRange && !currentTile.BlocksLineOfSight())
+            {
+                foreach (HexTile neighbor in GetNeighbors(currentTile, hexTiles))
+                {
+                    if (!visitedTiles.Contains(neighbor))
+                    {
+                        visitedTiles.Add(neighbor);
+
+                        // Only enqueue neighbors that don't block LOS from the start
+                        frontier.Enqueue((neighbor, currentDistance + 1));
+                    }
+                }
+            }
+        }
+
+        return tilesInRange;
+    }
+
     public static List<HexTile> HexLineDraw(HexTile startTile, HexTile endTile, Dictionary<Vector2Int, HexTile> hexTiles)
     {
         List<HexTile> tilesInLine = new List<HexTile>();
@@ -302,7 +333,7 @@ public static class HexPathfinding
         return tilesInLine;
     }
 
-    public static List<HexTile> GetHexsInDirection(HexTile startTile, int range,Vector2Int direction, Dictionary<Vector2Int, HexTile> hexTiles)
+    public static List<HexTile> GetHexsInDirection(HexTile startTile, int range, Vector2Int direction, Dictionary<Vector2Int, HexTile> hexTiles)
     {
         List<HexTile> hexes = new List<HexTile>();
 
