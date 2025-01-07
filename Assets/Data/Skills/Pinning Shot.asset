@@ -20,4 +20,4 @@ MonoBehaviour:
   - target: 4
     duration: 1
     effect: {fileID: 11400000, guid: 2fbc2208a52b9524989ff4d88fbc10f8, type: 2}
-  sprite: {fileID: 0}
+  sprite: {fileID: -1521913151, guid: 13c460b45955f424aa990dd4b1bdd124, type: 3}
