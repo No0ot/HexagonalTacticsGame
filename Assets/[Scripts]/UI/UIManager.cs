@@ -118,6 +118,10 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+        
+        // NICK - Update Effects UI after using effect
+        currentUnitProfile.UpdateReferenceEffects();
+        selectedUnitProfile.UpdateReferenceEffects();
     }
 
     public void ResetActions()
