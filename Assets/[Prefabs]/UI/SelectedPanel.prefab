@@ -38,7 +38,7 @@ PrefabInstance:
     - target: {fileID: 5891818152053591128, guid: 607f6ffe5ee4788488c00b3c255f66af, type: 3}
       propertyPath: scrollViewContent
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 3780024347967765017}
     - target: {fileID: 5891818152053591132, guid: 607f6ffe5ee4788488c00b3c255f66af, type: 3}
       propertyPath: m_Name
       value: SelectedPanel
@@ -149,3 +149,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 607f6ffe5ee4788488c00b3c255f66af, type: 3}
+--- !u!224 &3780024347967765017 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1580778046, guid: 607f6ffe5ee4788488c00b3c255f66af, type: 3}
+  m_PrefabInstance: {fileID: 3780024346656569383}
+  m_PrefabAsset: {fileID: 0}

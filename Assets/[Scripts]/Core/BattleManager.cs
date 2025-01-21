@@ -450,4 +450,9 @@ private void Awake()
         currentTurnUnit.EndTurn();
         StartTurnPhaseCoroutine(BattleTurnPhase.START, 1.0f);
     }
+
+    public Dictionary<Vector2Int,HexTile> GetHexTiles()
+    {
+        return hexGridGenerator.hexTiles;
+    }
 }

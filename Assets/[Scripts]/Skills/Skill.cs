@@ -78,7 +78,7 @@ public abstract class Skill : ScriptableObject
                     break;
 
                 case TargetType.ATTACK:
-                    user.attackAppliedEffects.Add(newEffect);
+                    user.specialAttackSkill = this;
                     break;
             }
         }

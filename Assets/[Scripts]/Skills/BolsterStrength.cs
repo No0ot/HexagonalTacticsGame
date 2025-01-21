@@ -7,17 +7,15 @@ public class BolsterStrength : Skill
 {
     public override List<HexTile> GetHexesInRange(Dictionary<Vector2Int, HexTile> hexTiles)
     {
-        throw new System.NotImplementedException();
+        List<HexTile> tiles = new List<HexTile>();
+
+        tiles = HexPathfinding.GetTilesWithinAttackRange(user.tile, hexTiles, range, false);
+
+        return tiles;
     }
 
-    //public override void UseSkill(List<UnitObject> target)
-    //{
-    //    foreach(UnitObject u in target)
-    //    {
-    //        Effect newEffect = new BuffStrength(value);
-    //        newEffect.duration = duration;
-    //        newEffect.ApplyEffect(u);
-    //        u.effects.Add(newEffect);
-    //    }
-    //}
+    public override void UseSkill(HexTile targetedHex, Dictionary<Vector2Int, HexTile> hexTiles)
+    {
+        base.UseSkill(targetedHex, hexTiles);
+    }
 }

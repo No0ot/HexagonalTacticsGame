@@ -158,6 +158,8 @@ public class UnitObject : MonoBehaviour
     [SerializeReference]
     public List<Effect> attackAppliedEffects = new List<Effect>();
 
+    public Skill specialAttackSkill;
+
     private void Awake()
     {
 
@@ -257,32 +259,44 @@ public class UnitObject : MonoBehaviour
             Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Front");
         }
 
-        for (int i = 0; i < unitInfo.localStats.GetStat(Stat.NUM_OF_ATTACKS).CalculateFinalValue(); i++)
+        if (specialAttackSkill != null)
         {
-            if (CheckIfHit(missChance))
+            if(CheckIfHit(missChance))
             {
-
-                float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
-                damage *= unitInfo.localStats.GetStat(Stat.DAMAGE_MULTIPLIER).CalculateFinalValue();
-                damage = Mathf.RoundToInt(damage);
-                unitInfo.localStats.EditStat(Stat.THREAT, damage);
-                other.TakeDamage(damage);
-                CombatTextGenerator.Instance.NewCombatText(other, damage);
-
-                foreach (Effect effect in attackAppliedEffects)
+                specialAttackSkill.UseSkill(other.tile, BattleManager.Instance.GetHexTiles());
+                Debug.Log("Special Skill used");
+            }
+            specialAttackSkill = null;
+        }
+        else
+        {
+            for (int i = 0; i < unitInfo.localStats.GetStat(Stat.NUM_OF_ATTACKS).CalculateFinalValue(); i++)
+            {
+                if (CheckIfHit(missChance))
                 {
-                    effect.ApplyEffect(other);
-                }
-                Debug.Log("And hit! Dealing " + damage);
-            }
-            else
-            {
-                CombatTextGenerator.Instance.NewCombatText(other, 0f);
-                //CombatTextGenerator.Instance.NewCombatText(other, 0f);
-                Debug.Log(" And missed!");
-            }
 
-            attackAppliedEffects.Clear();
+                    float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
+                    damage *= unitInfo.localStats.GetStat(Stat.DAMAGE_MULTIPLIER).CalculateFinalValue();
+                    damage = Mathf.RoundToInt(damage);
+                    unitInfo.localStats.EditStat(Stat.THREAT, damage);
+                    other.TakeDamage(damage);
+                    CombatTextGenerator.Instance.NewCombatText(other, damage);
+
+                    //foreach (Effect effect in attackAppliedEffects)
+                    //{
+                    //    effect.ApplyEffect(other);
+                    //}
+                    Debug.Log("And hit! Dealing " + damage);
+                }
+                else
+                {
+                    CombatTextGenerator.Instance.NewCombatText(other, 0f);
+                    //CombatTextGenerator.Instance.NewCombatText(other, 0f);
+                    Debug.Log(" And missed!");
+                }
+
+                //attackAppliedEffects.Clear();
+            }
         }
         other.Deactivate();
         other.attackDirection = null;

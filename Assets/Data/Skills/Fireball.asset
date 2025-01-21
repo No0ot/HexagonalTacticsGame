@@ -9,18 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d5b1e803372f34e8b376ef0bef2eb8, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ea97dc9db79f064ba1152112dbd3db3, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
   user: {fileID: 0}
   range: 0
-  radius: 2
+  radius: 3
   cooldown: 2
   effects:
-  - target: 1
-    duration: 1
-    effect: {fileID: 11400000, guid: 6664ad81c864ded4bbbb1f343f4c513e, type: 2}
-  - target: 1
-    duration: 1
-    effect: {fileID: 11400000, guid: e3c99bf7bf2a6d34982005f10ff41646, type: 2}
+  - target: 2
+    duration: 2
+    effect: {fileID: 11400000, guid: b8a90d6788545da4f9bc75a4d0b708e5, type: 2}
   sprite: {fileID: -2030022839, guid: a8a77b5e9c07bc14eb5dda1fc5e70757, type: 3}
+  mainAttribute: 2
+  attributeMultiplier: 1.2
+  damageVariance: 25
