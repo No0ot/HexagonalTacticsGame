@@ -41,6 +41,8 @@ public class Unit
     public Stats localStats;
     public Stats statTemplate;
 
+
+    public List<Skill> skills;
     public void SetPlayer(Player newplayer)
     {
         player = newplayer;
@@ -81,6 +83,7 @@ public class Unit
         localStats.SetStat(Stat.DASH_RANGE, tempDashRange);
         var tempThreat = job.baseStats.GetStat(Stat.THREAT).CalculateFinalValue();
         localStats.SetStat(Stat.THREAT, tempThreat);
+        localStats.SetStat(Stat.MAIN_STAT_MULTIPLIER, job.baseStats.GetStat(Stat.MAIN_STAT_MULTIPLIER).CalculateFinalValue());
 
         float attackModifier = 0;
         switch (job.mainAttribute)
@@ -101,6 +104,8 @@ public class Unit
                 attackModifier = tempStrength;
                 break;
         }
+        attackModifier *= localStats.GetStat(Stat.MAIN_STAT_MULTIPLIER).CalculateFinalValue();
+
         localStats.SetStat(Stat.MIN_DAMAGE, attackModifier);
         var tempMaxDamage = job.baseStats.GetStat(Stat.DAMAGE_VARIANCE).CalculateFinalValue() + attackModifier;
         localStats.SetStat(Stat.MAX_DAMAGE, tempMaxDamage);
@@ -110,6 +115,7 @@ public class Unit
         localStats.SetStat(Stat.DAMAGE_MULTIPLIER, 1.0f);
         localStats.SetStat(Stat.ACCURACY, 0.0f);
         localStats.SetStat(Stat.NUM_OF_ATTACKS, 1.0f);
+        localStats.SetStat(Stat.CRIT_MULTIPLIER, job.baseStats.GetStat(Stat.ARMOR).CalculateFinalValue());
     }
 
     public void RecalculateHealth()
@@ -129,16 +135,17 @@ public class Unit
         localStats.SetStat(Stat.INITIATIVE, tempInitiative);
     }
 }
+
 [Serializable]
 public class UnitObject : MonoBehaviour
 {
     public Unit unitInfo;
-    
+
 
     public MeshRenderer head;
     public MeshRenderer body;
     public MeshRenderer facingIndicator;
-    
+
     public HexTile tile;
     public HexTile attackDirection;
 
@@ -150,7 +157,9 @@ public class UnitObject : MonoBehaviour
     public bool hasDashed = false;
     public bool hasAttacked = false;
 
-    public int  actionPoint = 2;
+    public int actionPoint = 2;
+
+    //Below stuff should be moved to UNIT
 
     [SerializeReference]
     public List<Effect> effects = new List<Effect>();
@@ -159,6 +168,8 @@ public class UnitObject : MonoBehaviour
     public List<Effect> attackAppliedEffects = new List<Effect>();
 
     public Skill specialAttackSkill;
+
+    public bool attackCrit = false;
 
     private void Awake()
     {
@@ -172,7 +183,7 @@ public class UnitObject : MonoBehaviour
 
         int rand = UnityEngine.Random.Range(1, 7);
         //RotateTowards((HexDirection)rand);
-        foreach(Skill s in unitInfo.job.skills)
+        foreach(Skill s in unitInfo.skills)
         {
             skills.Add(s);
             
@@ -182,7 +193,25 @@ public class UnitObject : MonoBehaviour
         skillCooldowns.Add(0);
     }
 
-    
+    public void SetActiveSkill(int skillnum)
+    {
+        if(skillnum == -1)
+        {
+            activeSkill = null;
+            BattleManager.Instance.activeSkillNum = -1;
+            return;
+        }
+        BattleManager.Instance.activeSkillNum = skillnum;
+        Skill skill = skills[skillnum];
+        activeSkill = skill;
+        skillCooldowns[skillnum] = activeSkill.cooldown;
+        if (activeSkill as SpecialAttack)
+        {
+            Debug.Log("Set Active skill as Special Attack");
+            specialAttackSkill = skill as SpecialAttack;
+            specialAttackSkill.user = this;
+        }
+    }
 
     public void PlaceUnit(HexTile hex)
     {
@@ -225,72 +254,50 @@ public class UnitObject : MonoBehaviour
         transform.rotation = rotation;
     }
 
+
     public void Attack(UnitObject other)
     {
-        Vector3 noYpos = tile.transform.position;
-        noYpos.y = 0;
-        Vector3 otherNoYpos = other.transform.position;
-        otherNoYpos.y = 0;
-
-        Vector3 attackDirection = noYpos - otherNoYpos;
-        attackDirection.Normalize();
-
-        float angle = Vector3.Angle(attackDirection, other.transform.forward);
-        Debug.Log(angle);
-        float missChance = 30 + (int)other.unitInfo.localStats.GetStat(Stat.FINESSE).CalculateFinalValue() / unitInfo.level;
-        if(angle > 170)
-        {
-            missChance -= 30;
-            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Behind");
-        }
-        else if(angle > 120)
-        {
-            missChance -= 15;
-            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Slightly Behind");
-        }
-        else if(angle > 50)
-        {
-            missChance += 10;
-            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Slightly Front");
-        }
-        else
-        {
-            missChance += 20;
-            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Front");
-        }
-
         if (specialAttackSkill != null)
         {
-            if(CheckIfHit(missChance))
-            {
-                specialAttackSkill.UseSkill(other.tile, BattleManager.Instance.GetHexTiles());
-                Debug.Log("Special Skill used");
-            }
+           specialAttackSkill.UseSkill(other.tile, BattleManager.Instance.GetHexTiles());
+           Debug.Log("Special Skill used");
+            
             specialAttackSkill = null;
         }
         else
         {
             for (int i = 0; i < unitInfo.localStats.GetStat(Stat.NUM_OF_ATTACKS).CalculateFinalValue(); i++)
             {
-                if (CheckIfHit(missChance))
+                if (CheckIfHit(other))
                 {
+                    if (!attackCrit)
+                    {
+                        float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
+                        damage *= unitInfo.localStats.GetStat(Stat.DAMAGE_MULTIPLIER).CalculateFinalValue();
+                        damage = Mathf.RoundToInt(damage);
+                        unitInfo.localStats.EditStat(Stat.THREAT, damage);
+                        other.TakeDamage(damage);
+                        CombatTextGenerator.Instance.NewCombatText(other, damage, false);
 
-                    float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
-                    damage *= unitInfo.localStats.GetStat(Stat.DAMAGE_MULTIPLIER).CalculateFinalValue();
-                    damage = Mathf.RoundToInt(damage);
-                    unitInfo.localStats.EditStat(Stat.THREAT, damage);
-                    other.TakeDamage(damage);
-                    CombatTextGenerator.Instance.NewCombatText(other, damage);
+                        Debug.Log("And hit! Dealing " + damage);
+                    }
+                    else
+                    {
+                        float damage = UnityEngine.Random.Range(unitInfo.localStats.GetStat(Stat.MIN_DAMAGE).CalculateFinalValue(), unitInfo.localStats.GetStat(Stat.MAX_DAMAGE).CalculateFinalValue());
+                        damage *= unitInfo.localStats.GetStat(Stat.DAMAGE_MULTIPLIER).CalculateFinalValue();
+                        damage *= unitInfo.localStats.GetStat(Stat.CRIT_MULTIPLIER).CalculateFinalValue();
+                        damage = Mathf.RoundToInt(damage);
+                        unitInfo.localStats.EditStat(Stat.THREAT, damage);
+                        other.TakeDamage(damage);
+                        CombatTextGenerator.Instance.NewCombatText(other, damage, false);
+                        attackCrit = false;
 
-                    //foreach (Effect effect in attackAppliedEffects)
-                    //{
-                    //    effect.ApplyEffect(other);
-                    //}
-                    Debug.Log("And hit! Dealing " + damage);
+                        Debug.Log("And CRIT! Dealing " + damage);
+                    }
                 }
                 else
                 {
-                    CombatTextGenerator.Instance.NewCombatText(other, 0f);
+                    CombatTextGenerator.Instance.NewCombatText(other, 0f,false);
                     //CombatTextGenerator.Instance.NewCombatText(other, 0f);
                     Debug.Log(" And missed!");
                 }
@@ -302,13 +309,55 @@ public class UnitObject : MonoBehaviour
         other.attackDirection = null;
     }
 
-    public bool CheckIfHit(float missChance)
+    public bool CheckIfHit(UnitObject other)
     {
-        int attackroll = UnityEngine.Random.Range(1, 101 + (int)unitInfo.localStats.GetStat(Stat.CONCENTRATION).CalculateFinalValue() / 2);
-        Debug.Log(name + " has a " + (100 + (int)unitInfo.localStats.GetStat(Stat.CONCENTRATION).CalculateFinalValue() / 2 - missChance) + "% chance to hit)");
-        Debug.Log("Rolled a " + attackroll + " against " + missChance);
-        if (attackroll > missChance)
+        Vector3 noYpos = tile.transform.position;
+        noYpos.y = 0;
+        Vector3 otherNoYpos = other.transform.position;
+        otherNoYpos.y = 0;
+
+        Vector3 attackDirection = noYpos - otherNoYpos;
+        attackDirection.Normalize();
+
+        float angle = Vector3.Angle(attackDirection, other.transform.forward);
+        Debug.Log(angle);
+        float chanceToHit = 0;// + (int)other.unitInfo.localStats.GetStat(Stat.FINESSE).CalculateFinalValue() / unitInfo.level;
+        if (angle > 170)
+        {
+            chanceToHit = 70;
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Behind");
+        }
+        else if (angle > 120)
+        {
+            chanceToHit = 60;
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Slightly Behind");
+        }
+        else if (angle > 50)
+        {
+            chanceToHit = 40;
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Slightly Front");
+        }
+        else
+        {
+            chanceToHit = 30;
+            Debug.Log(unitInfo.name + " Attacked " + other.unitInfo.name + " from Front");
+        }
+        chanceToHit -= (int)other.unitInfo.localStats.GetStat(Stat.FINESSE).CalculateFinalValue() / unitInfo.level;
+
+        int attackRollMax = 101 + (int)unitInfo.localStats.GetStat(Stat.CONCENTRATION).CalculateFinalValue() / unitInfo.level;
+        int attackroll = UnityEngine.Random.Range(1, attackRollMax);
+
+        Debug.Log(name + " has a " + (attackRollMax - (100 - chanceToHit)) + "% chance to hit)");
+
+        Debug.Log("Rolled a " + attackroll + " against" + (100 - chanceToHit));
+
+        if (attackroll > 100 - chanceToHit)
+        {
+            //check if crit.
+            if (attackroll > 100)
+                attackCrit = true;
             return true;
+        }
         else
             return false;
     }
@@ -359,6 +408,8 @@ public class UnitObject : MonoBehaviour
 
     public void EndTurn()
     {
+        ResolveHealing();
+
         List<Effect> effectsToRemove = new List<Effect>();
         foreach(Effect effect in effects)
         {
@@ -396,5 +447,13 @@ public class UnitObject : MonoBehaviour
             UIManager.Instance.DisableAction(1);
             UIManager.Instance.DisableAction(2);
         }
+    }
+
+    public void ResolveHealing()
+    {
+        float healing = -unitInfo.localStats.GetStat(Stat.RESOLVE).CalculateFinalValue();
+
+        TakeDamage(healing);
+        CombatTextGenerator.Instance.NewCombatText(this, healing, false);
     }
 }

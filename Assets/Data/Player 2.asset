@@ -18,3 +18,4 @@ MonoBehaviour:
     unitScriptables:
     - {fileID: 11400000, guid: 9437f3fc70f486849a9d92909539acf7, type: 2}
     - {fileID: 11400000, guid: d9042d5a781e7be4eb7d3882b9bfc3c1, type: 2}
+    - {fileID: 11400000, guid: 11e7908182dbe2444985104614d65fc9, type: 2}

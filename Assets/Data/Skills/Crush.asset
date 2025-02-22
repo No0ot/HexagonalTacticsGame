@@ -17,10 +17,10 @@ MonoBehaviour:
   radius: 0
   cooldown: 0
   effects:
-  - target: 1
-    duration: 1
-    effect: {fileID: 11400000, guid: 6664ad81c864ded4bbbb1f343f4c513e, type: 2}
-  - target: 4
+  - target: 2
     duration: 2
     effect: {fileID: 11400000, guid: 50afdff7c0c1f83419c1768c909d3afc, type: 2}
   sprite: {fileID: -1126430409, guid: 678b079ae2c741145bcc61d27bcea2fb, type: 3}
+  mainAttribute: 0
+  attributeMultiplier: 1.4
+  damageVariance: 0

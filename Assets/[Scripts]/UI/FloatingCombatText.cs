@@ -26,15 +26,23 @@ public class FloatingCombatText : MonoBehaviour
         rect.position = startingPosition;
         rect.position = camera.WorldToScreenPoint(startingPosition);
     }
-    public void UpdateText(float damage, UnitObject unit)
+    public void UpdateText(float damage, UnitObject unit, bool crit)
     {
         //unitRef = unit;
         startingPosition = unit.transform.position;
         if (damage == 0)
             text.text = "Missed";
-        else
+        else if (damage > 0)
+        {
             text.text = "-" + damage;
-        text.fontSize = size;
+            text.color = Color.red;
+        }
+        else if(damage < 0)
+        {
+            text.text = "+" + -damage;
+            text.color = Color.green;
+        }
+        text.fontSize = crit ? size * 2 : size;
         StartCoroutine(Decay(duration));
     }
 

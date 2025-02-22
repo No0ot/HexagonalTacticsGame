@@ -49,3 +49,9 @@ MonoBehaviour:
   - statType: 20
     baseValue: 0
     statModifiers: []
+  - statType: 24
+    baseValue: 1
+    statModifiers: []
+  - statType: 25
+    baseValue: 1.55
+    statModifiers: []

@@ -82,6 +82,8 @@ public abstract class Skill : ScriptableObject
                     break;
             }
         }
+
+
     }
 
     public abstract List<HexTile> GetHexesInRange(Dictionary<Vector2Int, HexTile> hexTiles);

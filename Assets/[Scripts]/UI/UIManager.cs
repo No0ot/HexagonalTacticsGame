@@ -13,6 +13,9 @@ public class UIManager : MonoBehaviour
     public GameObject actionBar;
     public GameObject skillBar;
     public GameObject attackConfirmButton;
+    public GameObject skillConfirmButton;
+    public GameObject attackSwapSprite;
+    public GameObject specialAttackSprite;
     public List<GameObject> skillButtons = new List<GameObject>();
 
     public ProfileViewer currentUnitProfile;
@@ -25,6 +28,8 @@ public class UIManager : MonoBehaviour
     public TMP_Text roundText;
 
     public UnityEvent<BattleTurnPhase, float> UIButtonPressed;
+
+    bool isShowingSkillConfirm = false;
 
     private void Awake()
     {
@@ -64,26 +69,62 @@ public class UIManager : MonoBehaviour
 
     public void ActionAttack()
     {
+        if(BattleManager.Instance.GetCurrentTurnPhase() == BattleTurnPhase.ATTACK_SHOW)
+        {
+            attackConfirmButton.SetActive(false);
+        }
+        else
+        {
+            attackConfirmButton.SetActive(true); 
+        }
         UIButtonPressed.Invoke(BattleTurnPhase.ATTACK_SHOW, 0.0f);
-        attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
     }
 
     public void AttackConfirm()
     {
         UIButtonPressed.Invoke(BattleTurnPhase.ATTACK, 0.0f);
         attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
+        specialAttackSprite.SetActive(false);
     }
 
     public void ShowSkill(int buttonNum)
     {
+        BattleManager.Instance.currentTurnUnit.SetActiveSkill(buttonNum);
+        if(BattleManager.Instance.IsActiveSkillSpecialAttack())
+        {
+            ShowSkillConfirm();
+            return;
+        }
+
         UIButtonPressed.Invoke(BattleTurnPhase.SKILL_SHOW, 0.0f);
-        //attackConfirmButton.SetActive(!attackConfirmButton.activeInHierarchy);
-        BattleManager.Instance.activeSkillNum = buttonNum;
     }
 
-    public void SkillConfirm()
+    public void ShowSkillConfirm()
     {
-        //BattleManager.Instance.UseSkill(buttonNum);
+        skillConfirmButton.SetActive(!skillConfirmButton.activeInHierarchy);
+        attackSwapSprite.SetActive(true);
+        isShowingSkillConfirm = true;
+    }
+
+    public void PressSkillConfirm()
+    {
+        ShowSkills(false);
+        skillConfirmButton.SetActive(false);
+        attackSwapSprite.SetActive(false);
+        specialAttackSprite.SetActive(true);
+        isShowingSkillConfirm = false;
+        DisableAction(2);
+        BattleManager.Instance.currentTurnUnit.UseActionPoint();
+    }
+
+    public void CancelSpecialAttack()
+    {
+        BattleManager.Instance.currentTurnUnit.SetActiveSkill(-1);
+    }
+
+    public void SpecialAttackSwap()
+    {
+        PressSkillConfirm();
     }
 
     public void ShowSkills(bool tf)
@@ -132,6 +173,19 @@ public class UIManager : MonoBehaviour
         actionBar.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 
+    public void ResetActionBar()
+    {
+        if(isShowingSkillConfirm)
+        {
+            CancelSpecialAttack();
+            isShowingSkillConfirm = false;
+        }
+
+        ShowSkills(false);
+        skillConfirmButton.SetActive(false);
+        attackConfirmButton.SetActive(false);
+    }
+
     public void UpdateTurnOrderBar()
     {
         var turnOrder = BattleManager.Instance.turnOrder;
@@ -152,5 +206,10 @@ public class UIManager : MonoBehaviour
     public void UpdateRoundCounter(int round)
     {
         roundText.text = "Round: " + round;
+    }
+
+    public void ResetActionPanel()
+    {
+        
     }
 }

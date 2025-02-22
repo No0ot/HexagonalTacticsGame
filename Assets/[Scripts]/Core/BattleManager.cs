@@ -43,7 +43,8 @@ public class BattleManager : MonoBehaviour
     public List<UnitObject> attackedUnits = new List<UnitObject>();
 
     BattleTurnPhase currentTurnPhase = BattleTurnPhase.NONE;
-
+    public BattleTurnPhase GetCurrentTurnPhase()
+    { return currentTurnPhase; }
     public UnityEvent<BattleTurnPhase> BroadcastPhase;
 
      public int activeSkillNum = -1;
@@ -357,10 +358,25 @@ private void Awake()
         BroadcastPhase.Invoke(currentTurnPhase);
     }
 
+    public bool IsActiveSkillSpecialAttack()
+    {
+        if (currentTurnUnit.activeSkill as SpecialAttack != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
     void ShowSkillTiles()
     {
         currentTurnUnit.activeSkill = currentTurnUnit.skills[activeSkillNum];
         currentTurnUnit.activeSkill.user = currentTurnUnit;
+
+        //if(currentTurnUnit.activeSkill as SpecialAttack != null)
+        //{
+        //    UIManager.Instance.ShowSkillConfirm();
+        //    return;
+        //}
 
         List<HexTile> skillThreatenedHexes = currentTurnUnit.activeSkill.GetHexesInRange(hexGridGenerator.hexTiles);
         foreach (HexTile hex in skillThreatenedHexes)
@@ -448,6 +464,7 @@ private void Awake()
     void TurnEnd()
     {
         currentTurnUnit.EndTurn();
+        UIManager.Instance.ResetActionBar();
         StartTurnPhaseCoroutine(BattleTurnPhase.START, 1.0f);
     }
 

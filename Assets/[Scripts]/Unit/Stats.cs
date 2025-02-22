@@ -32,7 +32,9 @@ public enum Stat
     ARMOR,
     DAMAGE_MULTIPLIER,
     ACCURACY,
-    NUM_OF_ATTACKS
+    NUM_OF_ATTACKS,
+    MAIN_STAT_MULTIPLIER,
+    CRIT_MULTIPLIER
 }
 
 public enum StatModifierType

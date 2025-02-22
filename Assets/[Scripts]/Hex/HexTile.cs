@@ -44,7 +44,10 @@ public class HexTile : MonoBehaviour
     // Utility functions
     public bool IsWalkable()
     {
-        return !BlocksMovement;
+        if (BlocksMovement || Occupant != null)
+            return false;
+        else
+            return true;
     }
 
     public bool BlocksLineOfSight()

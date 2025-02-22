@@ -16,9 +16,9 @@ public class CombatTextGenerator : MonoBehaviour
         else
             Instance = this;
     }
-    public void NewCombatText(UnitObject unit, float damage)
+    public void NewCombatText(UnitObject unit, float damage, bool crit)
     {
         FloatingCombatText temp =  Instantiate(textPrefab, transform.GetChild(0));
-        temp.UpdateText(damage, unit);
+        temp.UpdateText(damage, unit, crit);
     }
 }
