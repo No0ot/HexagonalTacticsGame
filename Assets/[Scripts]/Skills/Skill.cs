@@ -37,6 +37,7 @@ public abstract class Skill : ScriptableObject
         foreach (TargetedEffect tEffect in effects)
         {
             Effect newEffect = new Effect(tEffect.effect, user);
+
             newEffect.duration = tEffect.duration;
 
             switch(tEffect.target)

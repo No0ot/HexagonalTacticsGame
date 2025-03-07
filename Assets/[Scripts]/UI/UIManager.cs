@@ -113,6 +113,7 @@ public class UIManager : MonoBehaviour
         attackSwapSprite.SetActive(false);
         specialAttackSprite.SetActive(true);
         isShowingSkillConfirm = false;
+
         DisableAction(2);
         BattleManager.Instance.currentTurnUnit.UseActionPoint();
     }

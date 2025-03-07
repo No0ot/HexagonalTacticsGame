@@ -28,12 +28,42 @@ public class SpecialAttack : Skill
         }
     }
 
+    public List<HexTile> GetThreatenedHexs(Dictionary<Vector2Int, HexTile> hexTiles)
+    {
+        List<HexTile> threatenedHexes = new List<HexTile>();
+
+        if (range == 0 && radius > 0)
+            threatenedHexes = HexPathfinding.GetTilesWithinAttackRange(user.tile, hexTiles, radius);
+        else
+            threatenedHexes = HexPathfinding.GetTilesWithinAttackRange(user.tile, hexTiles, (int)user.unitInfo.localStats.GetStat(Stat.RANGE).CalculateFinalValue());
+
+        return threatenedHexes;
+
+    }
+
+    public List<UnitObject> GetThreatenedUnits(List<HexTile> threatenedHexs)
+    {
+        List<UnitObject> threatenedUnits = new List<UnitObject>();
+
+        foreach(HexTile tile in threatenedHexs)
+        {
+            if(tile.Occupant)
+            {
+                // Ignore the user of the skill but still affects allies.
+                if (tile.Occupant != user)
+                    threatenedUnits.Add(tile.Occupant);
+            }
+        }
+
+        return threatenedUnits;
+    }
+
     public override void UseSkill(HexTile targetedHex, Dictionary<Vector2Int, HexTile> hexTiles)
     {
         List<UnitObject> targetedUnits = new List<UnitObject>();
         List<HexTile> affectedHexes;
 
-        if (range == 0)
+        if (range == 0 && radius > 0)
             affectedHexes = HexPathfinding.GetTilesWithinAttackRange(user.tile, hexTiles, radius);
         else
             affectedHexes = HexPathfinding.GetTilesWithinAttackRange(targetedHex, hexTiles, radius);
@@ -42,7 +72,7 @@ public class SpecialAttack : Skill
         {
             if (hex.Occupant)
             {
-                if (hex.Occupant.unitInfo.GetPlayer() != user.unitInfo.GetPlayer())
+                if (hex.Occupant != user)
                 {
                     if (user.CheckIfHit(hex.Occupant))
                     {

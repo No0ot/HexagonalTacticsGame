@@ -243,9 +243,45 @@ private void Awake()
 
     void ShowAttackTiles()
     {
-        List<HexTile> AttackTiles = HexPathfinding.GetTilesWithinAttackRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.RANGE).CalculateFinalValue());
-
+        List<HexTile> AttackTiles = new List<HexTile>();
         List<UnitObject> UnitsInTiles = new List<UnitObject>();
+        UnitObject threatenedTarget;
+
+        if (currentTurnUnit.specialAttackSkill != null)
+        {
+            SpecialAttack specialAttack = (SpecialAttack)currentTurnUnit.specialAttackSkill;
+            AttackTiles = specialAttack.GetThreatenedHexs(hexGridGenerator.hexTiles);
+
+            UnitsInTiles = specialAttack.GetThreatenedUnits(AttackTiles);
+            threatenedTarget = GetAttackThreatenedTarget(UnitsInTiles);
+            attackTargetedUnit = threatenedTarget;
+
+            foreach (HexTile hex in AttackTiles)
+            {
+                hex.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_RANGE);
+            }
+
+            if(specialAttack.radius > 0)
+            { 
+                foreach(UnitObject unit in UnitsInTiles)
+                {
+                    unit.tile.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_TARGET);
+                }
+
+                attackedUnits = UnitsInTiles;
+            }
+            else
+            {
+                threatenedTarget.tile.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_TARGET);
+                
+
+                attackedUnits.Add(threatenedTarget);
+            }
+            return;
+        }
+
+        AttackTiles = HexPathfinding.GetTilesWithinAttackRange(currentTurnUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.RANGE).CalculateFinalValue());
+
         foreach (HexTile hex in AttackTiles)
         {
             hex.GetComponent<HexTileHighlight>().ShowOutline(TileHighlight.ATTACK_RANGE);
@@ -263,7 +299,7 @@ private void Awake()
         if (UnitsInTiles.Count <= 0)
             return;
 
-        UnitObject threatenedTarget = GetAttackThreatenedTarget(UnitsInTiles);
+        threatenedTarget = GetAttackThreatenedTarget(UnitsInTiles);
         attackTargetedUnit = threatenedTarget;
 
         List<HexTile> AOETiles = HexPathfinding.GetTilesWithinAttackRange(attackTargetedUnit.tile, hexGridGenerator.hexTiles, (int)currentTurnUnit.unitInfo.localStats.GetStat(Stat.RADIUS).CalculateFinalValue());
@@ -290,11 +326,20 @@ private void Awake()
             return;
         }
 
-        foreach(UnitObject unit in attackedUnits)
+        if (currentTurnUnit.specialAttackSkill != null)
         {
-            currentTurnUnit.Attack(unit);
+            Debug.Log("Special Attack Skill used");
+            currentTurnUnit.specialAttackSkill.UseSkill(attackTargetedUnit.tile, hexGridGenerator.hexTiles);
+        }
+        else
+        {
+            foreach (UnitObject unit in attackedUnits)
+            {
+                currentTurnUnit.Attack(unit);
+            }
         }
 
+        currentTurnUnit.specialAttackSkill = null;
         UIManager.Instance.DisableAction(1);
         currentTurnUnit.UseActionPoint();
 
