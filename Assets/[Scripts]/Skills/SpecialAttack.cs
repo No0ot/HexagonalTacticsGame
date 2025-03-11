@@ -50,7 +50,7 @@ public class SpecialAttack : Skill
             if(tile.Occupant)
             {
                 // Ignore the user of the skill but still affects allies.
-                if (tile.Occupant != user)
+                if (tile.Occupant != user && tile.Occupant.unitInfo.GetPlayer() != user.unitInfo.GetPlayer())
                     threatenedUnits.Add(tile.Occupant);
             }
         }
@@ -86,6 +86,8 @@ public class SpecialAttack : Skill
                             user.unitInfo.localStats.EditStat(Stat.THREAT, damage);
                             hex.Occupant.TakeDamage(damage);
                             CombatTextGenerator.Instance.NewCombatText(hex.Occupant, damage,false);
+
+                            base.UseSkill(targetedHex, hexTiles);
                         }
                         else
                         {
@@ -99,6 +101,8 @@ public class SpecialAttack : Skill
                             hex.Occupant.TakeDamage(damage);
                             CombatTextGenerator.Instance.NewCombatText(hex.Occupant, damage, true);
                             user.attackCrit = false;
+
+                            base.UseSkill(targetedHex, hexTiles);
                         }
                     }
                     else
@@ -111,6 +115,6 @@ public class SpecialAttack : Skill
             }
         }
        
-        base.UseSkill(targetedHex, hexTiles);
+        
     }
 }

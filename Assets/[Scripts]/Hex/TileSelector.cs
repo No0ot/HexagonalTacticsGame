@@ -77,12 +77,15 @@ public class TileSelector : MonoBehaviour
             highlight.ShowRay(); // Show the outline
         }
 
-        if(tile.GetComponentInParent<HexTile>().Occupant)
+        if (BattleManager.Instance)
         {
-            UIManager.Instance.selectedUnitProfile.UpdateProfile(tile.GetComponentInParent<HexTile>().Occupant);
+            if (tile.GetComponentInParent<HexTile>().Occupant)
+            {
+                UIManager.Instance.selectedUnitProfile.UpdateProfile(tile.GetComponentInParent<HexTile>().Occupant);
+            }
+            else
+                UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
         }
-        else
-            UIManager.Instance.selectedUnitProfile.UpdateProfile(null);
     }
 
     private void RemoveOutline(GameObject tile)

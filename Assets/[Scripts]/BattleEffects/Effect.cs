@@ -33,6 +33,8 @@ public class Effect : ScriptableObject
     [HideInInspector]
     public UnitObject source;
 
+     public float threatGenerated = 0f;
+
     public Effect(Effect template, UnitObject newSource)
     {
         duration = template.duration;
@@ -62,6 +64,8 @@ public class Effect : ScriptableObject
         }
 
         target.unitInfo.RecalculateHealth();
+
+        source.unitInfo.localStats.EditStat(Stat.THREAT, threatGenerated);
     }
 
     public void RemoveEffect(UnitObject unit)

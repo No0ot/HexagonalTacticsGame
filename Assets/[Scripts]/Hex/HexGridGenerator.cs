@@ -31,12 +31,20 @@ public class HexGridGenerator : MonoBehaviour
 
     public Dictionary<Vector2Int, HexTile> hexTiles { get; private set; }
 
+    public bool alwaysGenerate = false;
+
     // Axial directions used for hexagonal grid
     private readonly Vector2Int[] hexDirections = {
         new Vector2Int(1, 0), new Vector2Int(1, -1), new Vector2Int(0, -1),
         new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(0, 1)
     };
 
+
+    private void Start()
+    {
+        if (alwaysGenerate)
+            InitializeHexGrid();
+    }
     public void InitializeHexGrid()
     {
         hexTiles = new Dictionary<Vector2Int, HexTile>();

@@ -9,15 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a809f762d6342746ac4d9868d11e250, type: 3}
-  m_Name: Charge
+  m_Script: {fileID: 11500000, guid: dec5328d93c2a534ca38cd43d77b13f8, type: 3}
+  m_Name: Blink
   m_EditorClassIdentifier: 
   user: {fileID: 0}
-  range: 5
+  range: 4
   radius: 0
   cooldown: 2
-  effects:
-  - target: 2
-    duration: 2
-    effect: {fileID: 11400000, guid: cc137fbb7e124314499921b1ce05f631, type: 2}
-  sprite: {fileID: 729170825, guid: a8a77b5e9c07bc14eb5dda1fc5e70757, type: 3}
+  effects: []
+  sprite: {fileID: -69199961, guid: 678b079ae2c741145bcc61d27bcea2fb, type: 3}

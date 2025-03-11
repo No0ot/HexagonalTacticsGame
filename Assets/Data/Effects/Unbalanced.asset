@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
+  m_Name: Unbalanced
+  m_EditorClassIdentifier: 
+  duration: 0
+  type: 0
+  sprite: {fileID: -752323608, guid: e5485c965ce19dc4ca1939218d5164d5, type: 3}
+  mods:
+  - moddedStat: 1
+    modifier:
+      value: 0.8
+      type: 1
+      order: 0
+    scaleWithMainStat: 0
+    mainStatScaleValue: 0
+  source: {fileID: 0}

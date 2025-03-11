@@ -26,7 +26,8 @@ public class HexTileHighlight : MonoBehaviour
     public List<Color> highlightColors;
     private void Start()
     {
-        BattleManager.Instance.BroadcastPhase.AddListener(BattlePhaseNotify);
+        if(BattleManager.Instance)
+            BattleManager.Instance.BroadcastPhase.AddListener(BattlePhaseNotify);
     }
     public void ShowRay()
     {
