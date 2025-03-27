@@ -61,6 +61,14 @@ public class UIManager : MonoBehaviour
         actionBar.transform.GetChild(button).GetComponent<Button>().interactable = false;
     }
 
+    public void DisableActionBar()
+    {
+        DisableAction(0);
+        DisableAction(1);
+        DisableAction(2);
+        DisableAction(3);
+    }
+
     public void ActionHoverAttack(bool tf)
     {
         //if(actionBar.transform.GetChild(1).GetComponent<Button>().interactable)
@@ -142,6 +150,9 @@ public class UIManager : MonoBehaviour
         {
             for(int i = 0; i < skillButtons.Count; i++)
             {
+                TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
+                buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
+
                 if(i + 1 > BattleManager.Instance.currentTurnUnit.skills.Count)
                 {
                     skillButtons[i].GetComponent<Button>().interactable = false;
@@ -154,8 +165,6 @@ public class UIManager : MonoBehaviour
                 }
                 else
                 {
-                    TMP_Text buttonLabel = skillButtons[i].GetComponentInChildren<TMP_Text>();
-                    buttonLabel.text = BattleManager.Instance.currentTurnUnit.skills[i].name;
                     skillButtons[i].GetComponent<Button>().interactable = true;
                 }
             }
@@ -168,9 +177,18 @@ public class UIManager : MonoBehaviour
 
     public void ResetActions()
     {
-        actionBar.transform.GetChild(0).GetComponent<Button>().interactable = true;
-        actionBar.transform.GetChild(1).GetComponent<Button>().interactable = true;
-        actionBar.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        DisableActionBar();
+
+        if (BattleManager.Instance.currentTurnUnit.actionPoint > 0)
+        {
+            if (!BattleManager.Instance.currentTurnUnit.hasMoved)
+                actionBar.transform.GetChild(0).GetComponent<Button>().interactable = true;
+            if (!BattleManager.Instance.currentTurnUnit.hasAttacked)
+                actionBar.transform.GetChild(1).GetComponent<Button>().interactable = true;
+            if (!BattleManager.Instance.currentTurnUnit.hasSkilled)
+                actionBar.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        }
+
         actionBar.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 

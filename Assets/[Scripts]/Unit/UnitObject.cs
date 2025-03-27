@@ -156,6 +156,7 @@ public class UnitObject : MonoBehaviour
     public bool hasMoved = false;
     public bool hasDashed = false;
     public bool hasAttacked = false;
+    public bool hasSkilled = false;
 
     public int actionPoint = 2;
 

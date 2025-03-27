@@ -342,8 +342,8 @@ private void Awake()
         currentTurnUnit.specialAttackSkill = null;
         UIManager.Instance.DisableAction(1);
         currentTurnUnit.UseActionPoint();
-
-        StartTurnPhaseCoroutine(BattleTurnPhase.IDLE, 1.0f);
+        currentTurnUnit.hasAttacked = true;
+       StartTurnPhaseCoroutine(BattleTurnPhase.IDLE, 1.0f);
     }
 
     void StartTurnPhaseCoroutine(BattleTurnPhase turnPhase, float time)
@@ -370,6 +370,7 @@ private void Awake()
             case BattleTurnPhase.IDLE:
                 attackedUnits.Clear();
                 attackTargetedUnit = null;
+                UIManager.Instance.ResetActions();
                 break;
             case BattleTurnPhase.MOVE_SHOW:
                 ShowMoveTiles();
@@ -445,6 +446,7 @@ private void Awake()
         StartTurnPhaseCoroutine(BattleTurnPhase.USESKILL, 0.0f);
         UIManager.Instance.DisableAction(2);
         currentTurnUnit.UseActionPoint();
+        currentTurnUnit.hasSkilled = true;
     }
 
     public void MoveUnit(HexTile hexTile)
@@ -469,8 +471,7 @@ private void Awake()
             currentTurnUnit.hasDashed = true;
         }
 
-        if(currentTurnUnit.hasMoved)
-            UIManager.Instance.DisableAction(0);
+        UIManager.Instance.DisableActionBar();
 
         currentTurnUnit.PlaceUnit(hexTile);
         StartTurnPhaseCoroutine(BattleTurnPhase.IDLE, 1.0f);
