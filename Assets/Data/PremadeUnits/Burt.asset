@@ -20,6 +20,6 @@ MonoBehaviour:
     localStats: {fileID: 0}
     statTemplate: {fileID: 11400000, guid: 2bbfcae1a4410bf42a1836376a2ad438, type: 2}
     skills:
-    - {fileID: 11400000, guid: a1712b9d5a5464f4d8d91527369c82a9, type: 2}
+    - {fileID: 11400000, guid: 06f869a699b90504e87da4a16bf3741e, type: 2}
     - {fileID: 11400000, guid: 1a9d80f95763e3446a0e18f2736039f7, type: 2}
-    - {fileID: 11400000, guid: b6ef3e9866e020a47b84e0327339898c, type: 2}
+    - {fileID: 11400000, guid: abef61cca9dcadb4f8b3a5ae87be5aed, type: 2}

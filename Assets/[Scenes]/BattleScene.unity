@@ -2180,6 +2180,7 @@ MonoBehaviour:
   rockyTilePrefab: {fileID: 5514948095288509877, guid: 1e4cfc500adfeb94b92245f07c080588, type: 3}
   forestTilePrefab: {fileID: 5514948095288509877, guid: 9c6fd416d1490ac458071db1322a51a8, type: 3}
   tilePrefabs: []
+  alwaysGenerate: 0
 --- !u!4 &406890474
 Transform:
   m_ObjectHideFlags: 0

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3721314c242bc749852d3dcc150bdc5, type: 3}
-  m_Name: Rage
+  m_Script: {fileID: 11500000, guid: d54d63cced4852345822eabb55c81608, type: 3}
+  m_Name: Rage2
   m_EditorClassIdentifier: 
   user: {fileID: 0}
   range: 0

@@ -74,7 +74,7 @@ public class SpecialAttack : Skill
             {
                 if (hex.Occupant != user)
                 {
-                    if (user.CheckIfHit(hex.Occupant))
+                    if (user.CheckIfHit(hex.Occupant, 0.0f))
                     {
                         if (!user.attackCrit)
                         {

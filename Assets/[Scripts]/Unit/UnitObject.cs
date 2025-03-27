@@ -260,7 +260,7 @@ public class UnitObject : MonoBehaviour
 
         for (int i = 0; i < unitInfo.localStats.GetStat(Stat.NUM_OF_ATTACKS).CalculateFinalValue(); i++)
         {
-            if (CheckIfHit(other))
+            if (CheckIfHit(other,0.0f))
             {
                 if (!attackCrit)
                 {
@@ -301,7 +301,7 @@ public class UnitObject : MonoBehaviour
         other.attackDirection = null;
     }
 
-    public bool CheckIfHit(UnitObject other)
+    public bool CheckIfHit(UnitObject other, float modifier)
     {
         Vector3 noYpos = tile.transform.position;
         noYpos.y = 0;
