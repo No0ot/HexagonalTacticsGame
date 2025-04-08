@@ -25,6 +25,8 @@ public class EffectMod
 [CreateAssetMenu(fileName = "New Effect", menuName = "Unit/Effect")]
 public class Effect : ScriptableObject
 {
+    public string name;
+    public string description;
     public int duration;
     public EffectType type;
     //public TargetType target;
@@ -32,6 +34,7 @@ public class Effect : ScriptableObject
     public List<EffectMod> mods = new List<EffectMod>();
     [HideInInspector]
     public UnitObject source;
+    
 
      public float threatGenerated = 0f;
 
@@ -43,6 +46,8 @@ public class Effect : ScriptableObject
         sprite = template.sprite;
         mods = template.mods;
         source = newSource;
+        name = template.name;
+        description = template.description;
     }
     public void ApplyEffect(UnitObject target)
     {

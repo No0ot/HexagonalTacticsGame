@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Entropy
   m_EditorClassIdentifier: 
+  name: Entropy
+  description: Decreases strength by 20%.
   duration: 0
   type: 0
   sprite: {fileID: 1833214171, guid: 86c0496de2d4166448f4062513b85595, type: 3}
@@ -24,3 +26,4 @@ MonoBehaviour:
     scaleWithMainStat: 0
     mainStatScaleValue: 1
   source: {fileID: 0}
+  threatGenerated: 0

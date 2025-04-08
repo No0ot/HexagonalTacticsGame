@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Fortify
   m_EditorClassIdentifier: 
+  name: Fortify
+  description: Increases armor by 20%.
   duration: 3
   type: 0
   sprite: {fileID: -760759519, guid: ffc3e397dc973fe49bb289b1f49dff02, type: 3}
@@ -24,3 +26,4 @@ MonoBehaviour:
     scaleWithMainStat: 0
     mainStatScaleValue: 0.1
   source: {fileID: 0}
+  threatGenerated: 0

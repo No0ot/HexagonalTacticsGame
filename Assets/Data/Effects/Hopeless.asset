@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Hopeless
   m_EditorClassIdentifier: 
+  name: Hopeless
+  description: Reduces resolve.
   duration: 0
   type: 0
   sprite: {fileID: 0}

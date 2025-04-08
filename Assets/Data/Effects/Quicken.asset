@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Quicken
   m_EditorClassIdentifier: 
+  name: Quicken
+  description: Increases dash range by 2 spaces.
   duration: 0
   type: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: 729170825, guid: a8a77b5e9c07bc14eb5dda1fc5e70757, type: 3}
   mods:
   - moddedStat: 11
     modifier:
@@ -24,3 +26,4 @@ MonoBehaviour:
     scaleWithMainStat: 0
     mainStatScaleValue: 0
   source: {fileID: 0}
+  threatGenerated: 0

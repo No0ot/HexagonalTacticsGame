@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Additional Attack
   m_EditorClassIdentifier: 
+  name: Additional Attack
+  description: Allows for an extra attack.
   duration: 0
   type: 0
   sprite: {fileID: 1819474293, guid: 86c0496de2d4166448f4062513b85595, type: 3}
@@ -24,3 +26,4 @@ MonoBehaviour:
     scaleWithMainStat: 0
     mainStatScaleValue: 0
   source: {fileID: 0}
+  threatGenerated: 0

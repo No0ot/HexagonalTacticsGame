@@ -72,6 +72,15 @@ public class ProfileViewer : MonoBehaviour
                 GameObject newEffect = Instantiate(prefab, scrollViewContent);
                 var x = newEffect.transform.Find("JobSprite").GetComponent<Image>();
                 x.sprite = effect.sprite;
+                newEffect.AddComponent<TooltipTrigger>();
+                var tooltip = newEffect.GetComponent<TooltipTrigger>();
+                
+                if (tooltip != null)
+                {
+                    tooltip.header = effect.name;
+                    tooltip.content = effect.description;
+                }
+                
             }
         }
     }

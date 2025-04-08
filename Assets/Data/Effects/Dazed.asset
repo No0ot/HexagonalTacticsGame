@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Dazed
   m_EditorClassIdentifier: 
+  name: Dazed
+  description: Decreases concentration by 20%.
   duration: 2
   type: 0
   sprite: {fileID: -456188679, guid: 678b079ae2c741145bcc61d27bcea2fb, type: 3}
@@ -24,3 +26,4 @@ MonoBehaviour:
     scaleWithMainStat: 0
     mainStatScaleValue: 0
   source: {fileID: 0}
+  threatGenerated: 0

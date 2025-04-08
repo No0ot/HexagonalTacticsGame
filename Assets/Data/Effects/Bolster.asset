@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5c092efaf1c58340b43b704a20fedd1, type: 3}
   m_Name: Bolster
   m_EditorClassIdentifier: 
+  name: Bolster
+  description: Increases damage multiplier by 20%.
   duration: 1
   type: 0
   sprite: {fileID: -1085276896, guid: 13c460b45955f424aa990dd4b1bdd124, type: 3}
@@ -24,3 +26,4 @@ MonoBehaviour:
     scaleWithMainStat: 0
     mainStatScaleValue: 1
   source: {fileID: 0}
+  threatGenerated: 0
